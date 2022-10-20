@@ -1,47 +1,121 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { ProductItem } from "../ProductsView/types";
 import { Link, useParams } from "react-router-dom";
-import { Button } from "@mui/material";
-import { getFetchData } from "../Units/getFetchData";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Rating,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import { fetchLinks } from "../Units/fetch-links";
+import { useQuery } from "@tanstack/react-query";
+import { binarySearch } from "../Units/binarySearch";
+
+const fetchProducts = async () => {
+  return await axios
+    .get(fetchLinks.products)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+};
 
 export const ProductView = () => {
-  const style = { width: "18rem" };
+  const params = useParams();
+  const { isError, data } = useQuery(["products"], fetchProducts, {
+    staleTime: 60000,
+  });
 
-  const productId = useParams();
-  const url = `https://61f5558a62f1e300173c40f3.mockapi.io/products/${productId.id}`;
+  let productIndex: number = -1;
 
-  const [product, setProduct] = useState<ProductItem>();
+  if (params.id && data) {
+    productIndex = binarySearch(data, params.id);
+  }
 
-  useEffect(() => {
-    getFetchData(url).then((data: ProductItem) => setProduct({ ...data }));
-  }, [url]);
+  if (productIndex < 0) {
+    return (
+      <Typography variant="h5" component="h6">
+        Loading...
+      </Typography>
+    );
+  }
 
-  return (
-    <div className="card" style={style}>
-      <img
-        src={`${product?.photo}?v=${product?.id}`}
-        className="card-img-top"
-        alt={product?.title}
+  const {
+    photo,
+    id,
+    rating,
+    isNew,
+    isSale,
+    isInStock,
+    price,
+    title,
+    description,
+  }: ProductItem = data[productIndex];
+
+  return !isError ? (
+    <Card sx={{ maxWidth: "25%" }}>
+      <CardMedia
+        component="img"
+        height="140"
+        image={`${photo}?v=${id}`}
+        alt="green iguana"
       />
-      <div className="card-body">
-        <h5 className="card-title">{product?.title}</h5>
-        <p className="card-text">{product?.description}</p>
-        {product?.isNew ? <p className="card-text">Новинка</p> : null}
-        {product?.isSale ? <p className="card-text">Распродажа</p> : null}
-        {product?.isInStock ? (
-          <p className="card-text">В наличии / Нет в наличии</p>
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {title}
+        </Typography>
+        <Typography gutterBottom variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+        {isNew ? (
+          <Typography
+            gutterBottom
+            variant="body2"
+            sx={{ color: "green", fontWeight: "bold" }}
+          >
+            IsNew
+          </Typography>
         ) : null}
-        <p className="card-text">{product?.price} $</p>
-        <p className="card-text">Рейтинг: {product?.rating}</p>
+        {isSale ? (
+          <Typography
+            gutterBottom
+            variant="body2"
+            sx={{ color: "blue", fontWeight: "bold" }}
+          >
+            IsSale
+          </Typography>
+        ) : null}
+        {isInStock ? (
+          <Typography
+            gutterBottom
+            variant="body2"
+            sx={{ color: "pink", fontWeight: "bold" }}
+          >
+            IsInStock
+          </Typography>
+        ) : null}
+        <Typography gutterBottom variant="h6" component="div">
+          Price: {price}
+        </Typography>
+        <Rating name="readOnly " readOnly precision={0.1} value={rating / 20} />
+      </CardContent>
+      <CardActions>
         <Button
           variant="contained"
+          color="success"
           LinkComponent={Link}
           {...{ to: "/products" }}
         >
           Back
         </Button>
-      </div>
-    </div>
+      </CardActions>
+    </Card>
+  ) : (
+    <Typography variant="h5" component="h6">
+      isError
+    </Typography>
   );
 };

@@ -11,8 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CategoriesProps, Category } from "./categories-types";
 import { fetchLinks } from "../Units/fetch-links";
 
-const fetchData = async () => {
-  console.log("запит");
+const fetchCategories = async () => {
   return await axios
     .get(fetchLinks.categories)
     .then((res) => res.data)
@@ -23,9 +22,13 @@ export const Categories = memo(
   ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
     const [checkedAll, setCheckedAll] = useState(true);
 
-    const { isError, isLoading, data } = useQuery(["categories"], fetchData, {
-      staleTime: 60000,
-    });
+    const { isError, isLoading, data } = useQuery(
+      ["categories"],
+      fetchCategories,
+      {
+        staleTime: 60000,
+      }
+    );
 
     const categories: Category[] = data;
 
@@ -44,7 +47,11 @@ export const Categories = memo(
 
     return (
       <>
-        {isLoading && <h5 className="card-title">Loading...</h5>}
+        {isLoading && (
+          <Typography variant="h5" component="h6">
+            Loading...
+          </Typography>
+        )}
 
         {!isLoading && categories?.length && (
           <>

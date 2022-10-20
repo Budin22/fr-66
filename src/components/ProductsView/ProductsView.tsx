@@ -11,8 +11,7 @@ import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";
 import { Search } from "./Search";
 
-const fetchData = async () => {
-  console.log("запит");
+const fetchProducts = async () => {
   return await axios
     .get(fetchLinks.products)
     .then((res) => res.data)
@@ -26,7 +25,7 @@ export const ProductsView = memo(() => {
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
 
-  const { isError, isLoading, data } = useQuery(["products"], fetchData, {
+  const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
     staleTime: 60000,
   });
 
