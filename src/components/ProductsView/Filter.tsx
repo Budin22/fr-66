@@ -11,7 +11,7 @@ import {
 
 import { FilterProps } from "./types";
 
-const Filter = memo(
+export const Filter = memo(
   ({ filterHandler, ratingHandler, priceHandler }: FilterProps) => {
     const [isNew, setIsNew] = useState<boolean>(false);
     const [isSale, setIsSale] = useState<boolean>(false);
@@ -173,5 +173,3 @@ const Filter = memo(
     );
   }
 );
-
-export default Filter;

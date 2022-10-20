@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 import { ProductsListSinglItem } from "./types";
 
-const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
+export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
   const {
     photo,
     title,
@@ -90,5 +90,3 @@ const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
     </Card>
   );
 });
-
-export default ProductsListItem;

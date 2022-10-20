@@ -1,15 +1,15 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-
-import Filter from "./Filter";
-import Categories from "./Categories";
-import ProductsListItem from "./ProductsListItem";
-import { fetchLinks } from "../Units/fetch-links";
-import { FilterValue, ProductItem } from "./types";
-import { Search } from "./Search";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+
+import { FilterValue, ProductItem } from "./types";
+import { fetchLinks } from "../Units/fetch-links";
+import { Filter } from "./Filter";
+import { Categories } from "./Categories";
+import { ProductsListItem } from "./ProductsListItem";
+import { Search } from "./Search";
 
 const fetchData = async () => {
   console.log("запит");

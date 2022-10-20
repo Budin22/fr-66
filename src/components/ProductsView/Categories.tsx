@@ -1,57 +1,33 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
-
-import { queryState } from "../Units/query-state";
-import { getFetchData } from "../Units/getFetchData";
-import { fetchLinks } from "../Units/fetch-links";
-import { QueryError } from "./types";
-import { CategoriesProps, Category } from "./categories-types";
+import React, { memo, useState } from "react";
 import {
   Checkbox,
   FormControlLabel,
   FormGroup,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-const Categories = memo(
+import { CategoriesProps, Category } from "./categories-types";
+import { fetchLinks } from "../Units/fetch-links";
+
+const fetchData = async () => {
+  console.log("запит");
+  return await axios
+    .get(fetchLinks.categories)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+};
+
+export const Categories = memo(
   ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [categoriesQueryStatus, setCategoriesQueryStatus] =
-      useState<queryState>(queryState.initial);
-    const [categoriesQueryError, setCategoriesQueryError] =
-      useState<QueryError>(null);
     const [checkedAll, setCheckedAll] = useState(true);
 
-    useEffect(() => {
-      setCategoriesQueryStatus(queryState.loading);
+    const { isError, isLoading, data } = useQuery(["categories"], fetchData, {
+      staleTime: 60000,
+    });
 
-      getFetchData(fetchLinks.categories)
-        .then((categoriesList) => {
-          setCategories(categoriesList);
-          setCategoriesQueryStatus(queryState.success);
-          setCategoriesQueryError(null);
-        })
-        .catch((error) => {
-          setCategoriesQueryStatus(queryState.error);
-          setCategoriesQueryError(error);
-        });
-    }, []);
-
-    const isLoading = useMemo(
-      () =>
-        categoriesQueryStatus === queryState.loading ||
-        categoriesQueryStatus === queryState.initial,
-      [categoriesQueryStatus]
-    );
-
-    const isSuccess = useMemo(
-      () => categoriesQueryStatus === queryState.success,
-      [categoriesQueryStatus]
-    );
-
-    const isError = useMemo(
-      () => categoriesQueryStatus === queryState.error,
-      [categoriesQueryStatus]
-    );
+    const categories: Category[] = data;
 
     const categoriesHandler = (event: React.SyntheticEvent<Element, Event>) => {
       setCheckedAll(false);
@@ -70,7 +46,7 @@ const Categories = memo(
       <>
         {isLoading && <h5 className="card-title">Loading...</h5>}
 
-        {!isLoading && isSuccess && (
+        {!isLoading && categories?.length && (
           <>
             <Typography variant="h5" component="h6">
               Categories
@@ -105,12 +81,10 @@ const Categories = memo(
 
         {!isLoading && isError && (
           <h5 className="card-title" style={{ color: "red" }}>
-            {categoriesQueryError?.message || "Something went wrong"}
+            {isError || "Something went wrong"}
           </h5>
         )}
       </>
     );
   }
 );
-
-export default Categories;

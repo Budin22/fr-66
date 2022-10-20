@@ -15,8 +15,6 @@ export interface ProductsListSinglItem {
   product: ProductItem;
 }
 
-export type QueryError = null | { message: string };
-
 export interface FilterValue {
   isNew: boolean;
   isSale: boolean;
