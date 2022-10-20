@@ -1,4 +1,5 @@
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouteObject, useRoutes } from "react-router-dom";
 import { Container } from "@mui/material";
 
@@ -9,6 +10,8 @@ import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
 import { ProductPage } from "./pages/ProductPage";
 import { CartPage } from "./pages/CartPage";
+
+const queryClient = new QueryClient();
 
 function App() {
   const routes: RouteObject[] = [
@@ -41,10 +44,12 @@ function App() {
   const root = useRoutes(routes);
 
   return (
-    <Container>
-      <Header />
-      {root}
-    </Container>
+    <QueryClientProvider client={queryClient}>
+      <Container>
+        <Header />
+        {root}
+      </Container>
+    </QueryClientProvider>
   );
 }
 

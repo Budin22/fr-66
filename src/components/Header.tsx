@@ -99,6 +99,8 @@ export function Header() {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              LinkComponent={NavLink}
+              {...{ to: "/cart" }}
             >
               <StyledBadge badgeContent={3} color="error">
                 <ShoppingCartIcon />

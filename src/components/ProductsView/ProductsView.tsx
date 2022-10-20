@@ -1,43 +1,36 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import Filter from "./Filter";
 import Categories from "./Categories";
 import ProductsListItem from "./ProductsListItem";
-import { queryState } from "../Units/query-state";
-import { getFetchData } from "../Units/getFetchData";
 import { fetchLinks } from "../Units/fetch-links";
-import { FilterValue, ProductItem, QueryError } from "./types";
+import { FilterValue, ProductItem } from "./types";
 import { Search } from "./Search";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const fetchData = async () => {
+  console.log("запит");
+  return await axios
+    .get(fetchLinks.products)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+};
 
 export const ProductsView = memo(() => {
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [products, setProducts] = useState<ProductItem[]>([]);
-  const [productsQueryStatus, setProductsQueryStatus] = useState(
-    queryState.initial
-  );
-  const [productsQueryError, setProductsQueryError] =
-    useState<QueryError>(null);
   const [searchValue, setSearchValue] = useState("");
   const [filterValue, setFilterValue] = useState<FilterValue>();
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
 
-  useEffect(() => {
-    setProductsQueryStatus(queryState.loading);
+  const { isError, isLoading, data } = useQuery(["products"], fetchData, {
+    staleTime: 60000,
+  });
 
-    getFetchData(fetchLinks.products)
-      .then((productsList) => {
-        setProducts(productsList);
-        setProductsQueryStatus(queryState.success);
-        setProductsQueryError(null);
-      })
-      .catch((error) => {
-        setProductsQueryStatus(queryState.error);
-        setProductsQueryError(error);
-      });
-  }, []);
+  const products = data;
 
   const ratingHandler = useCallback((rating: number[]) => {
     setRating(rating);
@@ -79,23 +72,8 @@ export const ProductsView = memo(() => {
     []
   );
 
-  const isLoading = useMemo(
-    () =>
-      productsQueryStatus === queryState.loading ||
-      productsQueryStatus === queryState.initial,
-    [productsQueryStatus]
-  );
-  const isSuccess = useMemo(
-    () => productsQueryStatus === queryState.success,
-    [productsQueryStatus]
-  );
-  const isError = useMemo(
-    () => productsQueryStatus === queryState.error,
-    [productsQueryStatus]
-  );
-
-  const currentProducts = useMemo(() => {
-    return products.filter((item) => {
+  const currentProducts: ProductItem[] = useMemo(() => {
+    return products?.filter((item: ProductItem) => {
       let result: boolean = true;
 
       if (selectedCategory.length) {
@@ -136,7 +114,7 @@ export const ProductsView = memo(() => {
 
       return result;
     });
-  }, [selectedCategory, products, searchValue, price, rating, filterValue]);
+  }, [products, filterValue, price, rating, searchValue, selectedCategory]);
 
   return (
     <Box display="flex">
@@ -154,9 +132,9 @@ export const ProductsView = memo(() => {
       <div className="card-body d-flex align-items-center gap-3 p-2 flex-column w-100">
         <Search changeSearchValue={changeSearchValue} />
 
-        {isLoading && <h5 className="card-title">Loading...</h5>}
+        {!products?.length && <h5 className="card-title">Loading...</h5>}
 
-        {!isLoading && isSuccess && (
+        {!isLoading && !!currentProducts.length && (
           <Box>
             <Typography
               gutterBottom
@@ -167,18 +145,16 @@ export const ProductsView = memo(() => {
               {currentProducts.length} из {products.length}
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
-              {currentProducts.length
-                ? currentProducts.map((item) => (
-                    <ProductsListItem key={item.id} product={item} />
-                  ))
-                : null}
+              {currentProducts.map((item) => (
+                <ProductsListItem key={item.id} product={item} />
+              ))}
             </Box>
           </Box>
         )}
 
         {!isLoading && isError && (
           <h5 className="card-title" style={{ color: "red" }}>
-            {productsQueryError?.message || "Something went wrong"}
+            {"Something went wrong"}
           </h5>
         )}
       </div>
