@@ -72,7 +72,7 @@ export const ProductsView = memo(() => {
     []
   );
 
-  const currentProducts: ProductItem[] = useMemo(() => {
+  let currentProducts: ProductItem[] = useMemo(() => {
     return products?.filter((item: ProductItem) => {
       let result: boolean = true;
 
@@ -115,6 +115,10 @@ export const ProductsView = memo(() => {
       return result;
     });
   }, [products, filterValue, price, rating, searchValue, selectedCategory]);
+
+  // if (currentProducts?.length) {
+  //   currentProducts.length = 10;
+  // }
 
   return (
     <Box display="flex">
