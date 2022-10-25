@@ -12,6 +12,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NavLink } from "react-router-dom";
 import { Button } from "@mui/material";
+import { cardGlobalStateI, initialStateI } from "./redux/cart-duck";
+import { useSelector } from "react-redux";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   color: "inherit",
@@ -37,6 +39,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export function Header() {
+  const cartProducts: initialStateI[] = useSelector(
+    (state: cardGlobalStateI): initialStateI[] => state.cart
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -102,7 +108,7 @@ export function Header() {
               LinkComponent={NavLink}
               {...{ to: "/cart" }}
             >
-              <StyledBadge badgeContent={3} color="error">
+              <StyledBadge badgeContent={cartProducts.length} color="error">
                 <ShoppingCartIcon />
               </StyledBadge>
             </IconButton>

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Box,
   TextField,
@@ -15,8 +15,24 @@ import {
 
 import { InputsI } from "./form-types";
 
+const userDevaultValue: {} = {
+  address: "",
+  address2: "",
+  checkbox: false,
+  city: "",
+  country: "",
+  delivery: "",
+  email: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  textarea: "",
+};
+
 export const FormView = memo(() => {
-  const { register, handleSubmit, reset } = useForm<InputsI>();
+  const { register, handleSubmit, reset, control } = useForm<InputsI>({
+    defaultValues: userDevaultValue,
+  });
   const onSubmit: SubmitHandler<InputsI> = (data) => {
     console.log(data);
     reset();
@@ -48,17 +64,23 @@ export const FormView = memo(() => {
           <InputLabel id="demo-simple-select-standard-label">
             Country
           </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            label="Country"
-            defaultValue=""
-            {...register("country")}
-          >
-            <MenuItem value="Ukraine">Ukraine</MenuItem>
-            <MenuItem value="Finland">Finland</MenuItem>
-            <MenuItem value="Poland">Poland</MenuItem>
-          </Select>
+          <Controller
+            control={control}
+            name="country"
+            render={({ field: { onChange, value } }) => (
+              <Select
+                onChange={onChange}
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                label="Country"
+                value={value}
+              >
+                <MenuItem value="Ukraine">Ukraine</MenuItem>
+                <MenuItem value="Finland">Finland</MenuItem>
+                <MenuItem value="Poland">Poland</MenuItem>
+              </Select>
+            )}
+          />
         </FormControl>
         <TextField
           sx={{ minWidth: "25%" }}
@@ -70,17 +92,23 @@ export const FormView = memo(() => {
           <InputLabel id="demo-simple-select-standard-label">
             Delivery type
           </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            label="Delivery type"
-            defaultValue=""
-            {...register("delivery")}
-          >
-            <MenuItem value="By wolfs">By wolfs</MenuItem>
-            <MenuItem value="By rabbit">By rabbit</MenuItem>
-            <MenuItem value="By duck">By duck</MenuItem>
-          </Select>
+          <Controller
+            control={control}
+            name="delivery"
+            render={({ field: { onChange, value } }) => (
+              <Select
+                onChange={onChange}
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                label="Delivery type"
+                value={value}
+              >
+                <MenuItem value="By wolfs">By wolfs</MenuItem>
+                <MenuItem value="By rabbit">By rabbit</MenuItem>
+                <MenuItem value="By duck">By duck</MenuItem>
+              </Select>
+            )}
+          />
         </FormControl>
       </Box>
       <Box display="flex" gap={3}>
@@ -135,9 +163,19 @@ export const FormView = memo(() => {
       >
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Controller
+                control={control}
+                name="checkbox"
+                render={({ field }) => (
+                  <Checkbox
+                    onChange={(e) => field.onChange(e.target.checked)}
+                    checked={!!field.value}
+                  />
+                )}
+              />
+            }
             label="I'm the best of the best"
-            {...register("checkbox")}
           />
         </FormGroup>
       </Box>

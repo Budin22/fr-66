@@ -11,8 +11,14 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 import { ProductsListSinglItem } from "./types";
+import { useSelector } from "react-redux";
+import { cardGlobalStateI, initialStateI } from "../redux/cart-duck";
 
 export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
+  const cartProducts: initialStateI[] = useSelector(
+    (state: cardGlobalStateI): initialStateI[] => state.cart
+  );
+
   const {
     photo,
     title,
@@ -28,15 +34,22 @@ export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
   const url = `/product/${id}`;
 
   return (
-    <Card sx={{ maxWidth: "31%" }}>
-      <CardMedia
-        component="img"
-        height="140"
-        image={`${photo}?v=${id}`}
-        alt="green iguana"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+    <Card
+      sx={{
+        maxWidth: "31%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <CardContent sx={{ display: "flex", flexDirection: "column", rowGap: 1 }}>
+        <CardMedia
+          component="img"
+          height="140"
+          image={`${photo}?v=${id}`}
+          alt="green iguana"
+        />
+        <Typography gutterBottom variant="h5" component="h2">
           {title}
         </Typography>
         <Typography gutterBottom variant="body2" color="text.secondary">
@@ -69,22 +82,26 @@ export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
             IsInStock
           </Typography>
         ) : null}
-        <Typography gutterBottom variant="h6" component="div">
+      </CardContent>
+      <CardActions
+        sx={{ flexDirection: "column", alignItems: "flex-start", rowGap: 1 }}
+      >
+        <Typography gutterBottom variant="h6" component="h6">
           Price: {price}
         </Typography>
         <Rating name="readOnly " readOnly precision={0.1} value={rating / 20} />
-      </CardContent>
-      <CardActions>
         <Button
+          fullWidth={true}
           variant="contained"
+          disabled={!isInStock}
           color="success"
           LinkComponent={Link}
           {...{ to: url }}
         >
-          Show
-        </Button>
-        <Button variant="contained" LinkComponent={Link} {...{ to: url }}>
-          Add to cart
+          Show{" "}
+          {cartProducts.find((item) => item.id === id)
+            ? "(Product in cart)"
+            : ""}
         </Button>
       </CardActions>
     </Card>

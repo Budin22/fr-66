@@ -12,5 +12,5 @@ export interface InputsI {
   address: string;
   address2: string;
   textarea: string;
-  checkbox: string;
+  checkbox: boolean;
 }

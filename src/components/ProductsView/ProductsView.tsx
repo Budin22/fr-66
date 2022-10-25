@@ -19,6 +19,7 @@ const fetchProducts = async () => {
 };
 
 export const ProductsView = memo(() => {
+
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterValue, setFilterValue] = useState<FilterValue>();
@@ -26,7 +27,7 @@ export const ProductsView = memo(() => {
   const [price, setPrice] = useState<number[]>([]);
 
   const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
-    staleTime: 60000,
+    refetchInterval: 600000,
   });
 
   const products = data;
@@ -115,9 +116,9 @@ export const ProductsView = memo(() => {
     });
   }, [products, filterValue, price, rating, searchValue, selectedCategory]);
 
-  // if (currentProducts?.length) {
-  //   currentProducts.length = 10;
-  // }
+  if (currentProducts?.length) {
+    currentProducts.length = 10;
+  }
 
   return (
     <Box display="flex">
@@ -164,3 +165,43 @@ export const ProductsView = memo(() => {
     </Box>
   );
 });
+
+
+//
+// const data: number[] = [];
+//
+// for (let i = 0; i < 20; i++) {
+//   data.push(i);
+// }
+//
+// interface PagesI {
+//   numPage: number;
+//   start: number;
+//   end: number;
+// }
+
+
+// const divedToPages = (array: number[], etc: number): PagesI[] => {
+//   const numOfPages: number = Math.ceil(array.length / etc);
+//
+//   const pages: PagesI[] = [];
+//   let numPage: number = 1;
+//   let start: number = 0;
+//   let end: number = 0;
+//   if (array.length > 0) {
+//     for (let i = 1; i <= numOfPages; i++) {
+//       const numPage: number = i;
+//       if (i === 1) {
+//         end = array.length > end + etc ? end + etc - 1 : array.length - 1;
+//       } else {
+//         start = end + 1;
+//
+//         end = array.length > start + etc ? start + etc - 1 : array.length - 1;
+//       }
+//       pages.push({ numPage, start, end });
+//     }
+//   } else {
+//     pages.push({ numPage, start, end });
+//   }
+//   return pages;
+// };

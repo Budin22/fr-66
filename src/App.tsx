@@ -2,6 +2,8 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouteObject, useRoutes } from "react-router-dom";
 import { Container } from "@mui/material";
+import { store } from "./components/redux/store";
+import { Provider } from "react-redux";
 
 import { Header } from "./components/Header";
 import { FormPage } from "./pages/FormPage";
@@ -44,12 +46,14 @@ function App() {
   const root = useRoutes(routes);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Container>
-        <Header />
-        {root}
-      </Container>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Container>
+          <Header />
+          {root}
+        </Container>
+      </QueryClientProvider>
+    </Provider>
   );
 }
 
