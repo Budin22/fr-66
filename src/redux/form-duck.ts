@@ -20,14 +20,17 @@ const initialState: InputsI = {
 };
 
 export const {
-  actions: { submitForm },
+  actions: { submitForm, clearForm },
   reducer,
 } = createSlice({
   name: cartNamespace,
   initialState,
   reducers: {
-    submitForm(state: InputsI, action: PayloadAction<InputsI>) {
+    submitForm(state, action: PayloadAction<InputsI>) {
       return action.payload;
+    },
+    clearForm() {
+      return initialState;
     },
   },
 });

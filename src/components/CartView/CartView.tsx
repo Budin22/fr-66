@@ -12,7 +12,6 @@ export const CartView = () => {
       </Typography>
       <Stack spacing={2}>
         <UserForm />
-
         <CartProductsList />
       </Stack>
     </>

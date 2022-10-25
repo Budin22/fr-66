@@ -8,19 +8,39 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import { CartItem } from "./CartItem";
-import React, { memo } from "react";
-import { cardGlobalStateI, initialStateI } from "../../redux/cart-duck";
-import { useAppSelector } from "../../redux/store";
+import React, { memo, useState } from "react";
+import {
+  removeAllProducts,
+} from "../../redux/cart-duck";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import Backdrop from "@mui/material/Backdrop";
+import { OrderInfo } from "./OrderInfo";
+import { useNavigate } from "react-router-dom";
+import { clearForm } from "../../redux/form-duck";
 
 export const CartProductsList = memo(() => {
-  const cartProducts: initialStateI[] = useAppSelector(
-    (state: cardGlobalStateI): initialStateI[] => state.cart
-  );
+  const [open, setOpen] = useState(false);
+  const cartProducts = useAppSelector((state) => state.cart);
+  const formValue = useAppSelector((state) => state.form);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const totalPrice = cartProducts.reduce(
     (a, b) => a + parseInt(b.price) * b.number,
     0
   );
+
+  const handleClose = () => {
+    setOpen(false);
+    console.log(cartProducts, formValue);
+    dispatch(removeAllProducts());
+    dispatch(clearForm());
+    navigate("/products");
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
   return (
     <>
       {!!cartProducts.length ? (
@@ -54,7 +74,21 @@ export const CartProductsList = memo(() => {
             >
               Total price: {totalPrice} $
             </Typography>
-            <Button variant="contained">Make order</Button>
+            <>
+              <Button onClick={handleToggle} variant="contained">
+                Make order
+              </Button>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open}
+                onClick={handleClose}
+              >
+                <OrderInfo />
+              </Backdrop>
+            </>
           </Box>
         </>
       ) : (

@@ -28,26 +28,28 @@ export const cartNamespace: namespaceT = "cart";
 const initialState: initialStateI[] = [];
 
 export const {
-  actions: { addProduct, removeProduct, changeNumberProduct },
+  actions: {
+    addProduct,
+    removeProduct,
+    changeNumberProduct,
+    removeAllProducts,
+  },
   reducer,
 } = createSlice({
   name: cartNamespace,
   initialState,
   reducers: {
-    addProduct(state: initialStateI[], action: PayloadAction<initialStateI>) {
+    addProduct(state, action: PayloadAction<initialStateI>) {
       state.push(action.payload);
     },
-    removeProduct(
-      state: initialStateI[],
-      action: PayloadAction<removeActionI>
-    ) {
+    removeProduct(state, action: PayloadAction<removeActionI>) {
       state.splice(action.payload.index, 1);
     },
-    changeNumberProduct(
-      state: initialStateI[],
-      action: PayloadAction<changeActionI>
-    ) {
+    changeNumberProduct(state, action: PayloadAction<changeActionI>) {
       state[action.payload.index].number = action.payload.number;
+    },
+    removeAllProducts(state) {
+      state.length = 0;
     },
   },
 });

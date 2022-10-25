@@ -22,7 +22,7 @@ export const UserForm = memo(() => {
           component="h2"
           variant="h4"
         >
-          User info
+          User form
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
