@@ -19,7 +19,6 @@ import { submitForm } from "../../redux/form-duck";
 
 export const FormView = memo(() => {
   const formValue = useAppSelector((state) => state.form);
-  console.log(formValue);
 
   const { register, handleSubmit, reset, control } = useForm<InputsI>({
     defaultValues: formValue,
