@@ -9,9 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import { CartItem } from "./CartItem";
 import React, { memo, useState } from "react";
-import {
-  removeAllProducts,
-} from "../../redux/cart-duck";
+import { removeAllProducts } from "../../redux/cart-duck";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import Backdrop from "@mui/material/Backdrop";
 import { OrderInfo } from "./OrderInfo";
@@ -75,7 +73,11 @@ export const CartProductsList = memo(() => {
               Total price: {totalPrice} $
             </Typography>
             <>
-              <Button onClick={handleToggle} variant="contained">
+              <Button
+                onClick={handleToggle}
+                variant="contained"
+                disabled={!formValue.checkbox}
+              >
                 Make order
               </Button>
               <Backdrop
