@@ -23,7 +23,7 @@ export interface cardGlobalStateI {
 
 type namespaceT = "cart";
 
-export const cartNamespace: namespaceT = "cart";
+const cartNamespace: namespaceT = "cart";
 
 const initialState: initialStateI[] = [];
 

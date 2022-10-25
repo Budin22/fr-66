@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   Box,
   Checkbox,
@@ -20,9 +20,18 @@ export const Filter = memo(
     const [price, setPrice] = useState<number[]>([20, 3500]);
     const [rating, setRating] = useState<number[]>([0, 100]);
 
-    const isNewHandler = () => setIsNew((state) => !state);
-    const isSaleHandler = () => setIsSale((state) => !state);
-    const isInStokeHandler = () => setIsInStock((state) => !state);
+    const isNewHandler = useCallback(
+      () => setIsNew((state) => !state),
+      [setIsNew]
+    );
+    const isSaleHandler = useCallback(
+      () => setIsSale((state) => !state),
+      [setIsSale]
+    );
+    const isInStokeHandler = useCallback(
+      () => setIsInStock((state) => !state),
+      [setIsInStock]
+    );
 
     useEffect(() => {
       filterHandler({
@@ -40,45 +49,63 @@ export const Filter = memo(
       priceHandler(price);
     }, [price, priceHandler]);
 
-    const priceHandler1 = (event: Event, newValue: number | number[]) => {
-      setPrice(newValue as number[]);
-    };
+    const priceHandler1 = useCallback(
+      (event: Event, newValue: number | number[]) => {
+        setPrice(newValue as number[]);
+      },
+      [setPrice]
+    );
 
-    const ratingHandler1 = (event: Event, newValue: number | number[]) => {
-      setRating(newValue as number[]);
-    };
+    const ratingHandler1 = useCallback(
+      (event: Event, newValue: number | number[]) => {
+        setRating(newValue as number[]);
+      },
+      [setRating]
+    );
 
-    const minPriceHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (Number(e.currentTarget.value) > price[1]) {
-        setPrice([price[1], price[1]]);
-      } else {
-        setPrice([Number(e.currentTarget.value), price[1]]);
-      }
-    };
+    const minPriceHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.currentTarget.value) > price[1]) {
+          setPrice([price[1], price[1]]);
+        } else {
+          setPrice([Number(e.currentTarget.value), price[1]]);
+        }
+      },
+      [price]
+    );
 
-    const maxPriceHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (Number(e.currentTarget.value) < price[0]) {
-        setPrice([price[0], price[0]]);
-      } else {
-        setPrice([price[0], Number(e.currentTarget.value)]);
-      }
-    };
+    const maxPriceHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.currentTarget.value) < price[0]) {
+          setPrice([price[0], price[0]]);
+        } else {
+          setPrice([price[0], Number(e.currentTarget.value)]);
+        }
+      },
+      [price]
+    );
 
-    const minRatingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (Number(e.currentTarget.value) > rating[1]) {
-        setRating([rating[1], rating[1]]);
-      } else {
-        setRating([Number(e.currentTarget.value), rating[1]]);
-      }
-    };
+    const minRatingHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.currentTarget.value) > rating[1]) {
+          setRating([rating[1], rating[1]]);
+        } else {
+          setRating([Number(e.currentTarget.value), rating[1]]);
+        }
+      },
+      [rating]
+    );
 
-    const maxRatingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (Number(e.currentTarget.value) < rating[0]) {
-        setRating([rating[0], rating[0]]);
-      } else {
-        setRating([rating[0], Number(e.currentTarget.value)]);
-      }
-    };
+    const maxRatingHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.currentTarget.value) < rating[0]) {
+          setRating([rating[0], rating[0]]);
+        } else {
+          setRating([rating[0], Number(e.currentTarget.value)]);
+        }
+      },
+      [rating]
+    );
 
     return (
       <Box sx={{ width: "100%" }}>

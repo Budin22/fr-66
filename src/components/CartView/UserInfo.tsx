@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { useAppSelector } from "../../redux/store";
 
 export const UserInfo = memo(() => {

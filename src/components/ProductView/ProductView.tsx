@@ -1,6 +1,4 @@
-import React from "react";
-
-import { ProductItem } from "../ProductsView/types";
+import React, { memo, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Button,
@@ -12,44 +10,26 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { fetchLinks } from "../Units/fetch-links";
 import { useQuery } from "@tanstack/react-query";
-import {
-  addProduct,
-  cardGlobalStateI,
-  initialStateI,
-  removeProduct,
-} from "../../redux/cart-duck";
-import { useDispatch, useSelector } from "react-redux";
 
-export const ProductView = () => {
+import { ProductItem } from "../ProductsView/types";
+import { fetchLinks } from "../Units/fetch-links";
+import { addProduct, removeProduct } from "../../redux/cart-duck";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+
+export const ProductView = memo(() => {
   const params = useParams();
+  const dispatch = useAppDispatch();
+  const cartProducts = useAppSelector((state) => state.cart);
 
-  const cartProducts: initialStateI[] = useSelector(
-    (state: cardGlobalStateI): initialStateI[] => state.cart
-  );
-
-  console.log(cartProducts);
-
-  const dispatch = useDispatch();
-
-  const fetchProducts = async () => {
+  const fetchProduct = async () => {
     return await axios
       .get(`${fetchLinks.products}/${params.id}`)
       .then((res) => res.data)
       .catch((err) => console.log(err));
   };
 
-  const { isError, data } = useQuery([`${params.id}`], fetchProducts);
-
-  if (!data) {
-    return (
-      <Typography variant="h5" component="h6">
-        Loading...
-      </Typography>
-    );
-  }
-
+  const { isError, data } = useQuery([`${params.id}`], fetchProduct);
   const {
     photo,
     id,
@@ -62,14 +42,22 @@ export const ProductView = () => {
     description,
   }: ProductItem = data;
 
-  const ProductHandler = () => {
+  const ProductHandler = useCallback(() => {
     const index: number = cartProducts.findIndex((item) => item.id === id);
     if (index > -1) {
       dispatch(removeProduct({ index }));
     } else {
       dispatch(addProduct({ id, number: 1, photo, title, price }));
     }
-  };
+  }, [cartProducts, id, photo, price, dispatch, title]);
+
+  if (!data) {
+    return (
+      <Typography variant="h5" component="h6">
+        Loading...
+      </Typography>
+    );
+  }
 
   return !isError ? (
     <Card
@@ -147,4 +135,4 @@ export const ProductView = () => {
       isError
     </Typography>
   );
-};
+});

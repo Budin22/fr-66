@@ -19,9 +19,8 @@ const fetchProducts = async () => {
 };
 
 export const ProductsView = memo(() => {
-
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState<string>("");
   const [filterValue, setFilterValue] = useState<FilterValue>();
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
@@ -73,7 +72,7 @@ export const ProductsView = memo(() => {
   );
 
   let currentProducts: ProductItem[] = useMemo(() => {
-    return products?.filter((item: ProductItem) => {
+    return products.filter((item: ProductItem) => {
       let result: boolean = true;
 
       if (selectedCategory.length) {
@@ -115,10 +114,6 @@ export const ProductsView = memo(() => {
       return result;
     });
   }, [products, filterValue, price, rating, searchValue, selectedCategory]);
-
-  if (currentProducts?.length) {
-    currentProducts.length = 10;
-  }
 
   return (
     <Box display="flex">
@@ -166,7 +161,6 @@ export const ProductsView = memo(() => {
   );
 });
 
-
 //
 // const data: number[] = [];
 //
@@ -179,7 +173,6 @@ export const ProductsView = memo(() => {
 //   start: number;
 //   end: number;
 // }
-
 
 // const divedToPages = (array: number[], etc: number): PagesI[] => {
 //   const numOfPages: number = Math.ceil(array.length / etc);

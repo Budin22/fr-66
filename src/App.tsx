@@ -6,7 +6,6 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
 import { Header } from "./components/Header";
-import { FormPage } from "./pages/FormPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
@@ -24,10 +23,6 @@ function App() {
     {
       path: "/products",
       element: <ProductsPage />,
-    },
-    {
-      path: "/form",
-      element: <FormPage />,
     },
     {
       path: "/about",

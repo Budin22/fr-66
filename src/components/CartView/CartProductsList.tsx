@@ -1,3 +1,5 @@
+import React, { memo, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionDetails,
@@ -7,14 +9,13 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import { CartItem } from "./CartItem";
-import React, { memo, useState } from "react";
-import { removeAllProducts } from "../../redux/cart-duck";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import Backdrop from "@mui/material/Backdrop";
-import { OrderInfo } from "./OrderInfo";
-import { useNavigate } from "react-router-dom";
+
 import { clearForm } from "../../redux/form-duck";
+import { removeAllProducts } from "../../redux/cart-duck";
+import { CartItem } from "./CartItem";
+import { OrderInfo } from "./OrderInfo";
 
 export const CartProductsList = memo(() => {
   const [open, setOpen] = useState(false);
@@ -24,9 +25,9 @@ export const CartProductsList = memo(() => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const totalPrice = cartProducts.reduce(
-    (a, b) => a + parseInt(b.price) * b.number,
-    0
+  const totalPrice = useMemo(
+    () => cartProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    [cartProducts]
   );
 
   const handleClose = () => {
@@ -36,9 +37,11 @@ export const CartProductsList = memo(() => {
     dispatch(clearForm());
     navigate("/products");
   };
+
   const handleToggle = () => {
     setOpen(!open);
   };
+
   return (
     <>
       {!!cartProducts.length ? (

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import {
   Checkbox,
   FormControlLabel,
@@ -32,18 +32,21 @@ export const Categories = memo(
 
     const categories: Category[] = data;
 
-    const categoriesHandler = (event: React.SyntheticEvent<Element, Event>) => {
-      setCheckedAll(false);
-      const id = event.currentTarget.getAttribute("name");
-      if (id !== null) {
-        selectCategoryHandler(id);
-      }
-    };
+    const categoriesHandler = useCallback(
+      (event: React.SyntheticEvent<Element, Event>) => {
+        setCheckedAll(false);
+        const id = event.currentTarget.getAttribute("name");
+        if (id !== null) {
+          selectCategoryHandler(id);
+        }
+      },
+      [selectCategoryHandler]
+    );
 
-    const allCheckedHandler = () => {
+    const allCheckedHandler = useCallback(() => {
       selectCategoryHandler("all");
       setCheckedAll((state) => !state);
-    };
+    }, [selectCategoryHandler]);
 
     return (
       <>

@@ -11,14 +11,10 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 import { ProductsListSinglItem } from "./types";
-import { useSelector } from "react-redux";
-import { cardGlobalStateI, initialStateI } from "../../redux/cart-duck";
+import { useAppSelector } from "../../redux/store";
 
 export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
-  const cartProducts: initialStateI[] = useSelector(
-    (state: cardGlobalStateI): initialStateI[] => state.cart
-  );
-
+  const cartProducts = useAppSelector((state) => state.cart);
   const {
     photo,
     title,

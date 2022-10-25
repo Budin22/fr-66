@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -9,12 +8,13 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, ButtonGroup, TextField } from "@mui/material";
+
 import {
   changeNumberProduct,
   initialStateI,
   removeProduct,
 } from "../../redux/cart-duck";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 
 interface CartItemProps {
   product: initialStateI;
@@ -24,9 +24,6 @@ interface CartItemProps {
 export const CartItem = memo((props: CartItemProps) => {
   const { id, number, price, title, photo } = props.product;
   const index: number = props.index;
-  const cartProducts = useAppSelector((state) => state.cart);
-
-  console.log(cartProducts);
 
   const [count, setCount] = useState<number>(Number(number));
   const [totalPrice, setTotalPrice] = useState<number>(Number(price));

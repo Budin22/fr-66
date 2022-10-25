@@ -3,7 +3,7 @@ import { InputsI } from "../components/FormView/form-types";
 
 type namespaceT = "form";
 
-export const cartNamespace: namespaceT = "form";
+const cartNamespace: namespaceT = "form";
 
 const initialState: InputsI = {
   address: "",

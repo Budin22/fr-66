@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,14 +7,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Box, Typography } from "@mui/material";
+
 import { useAppSelector } from "../../redux/store";
 
 export const OrderInfo = memo(() => {
   const orderProducts = useAppSelector((state) => state.cart);
-  const totalPrice = orderProducts.reduce(
-    (a, b) => a + parseInt(b.price) * b.number,
-    0
+  const totalPrice = useMemo(
+    () => orderProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    [orderProducts]
   );
+
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}

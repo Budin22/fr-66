@@ -1,6 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
+
 import { UserForm } from "./UserForm";
 import { CartProductsList } from "./CartProductsList";
 import { UserInfo } from "./UserInfo";

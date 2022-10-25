@@ -12,8 +12,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NavLink } from "react-router-dom";
 import { Button } from "@mui/material";
-import { cardGlobalStateI, initialStateI } from "../redux/cart-duck";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../redux/store";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   color: "inherit",
@@ -39,9 +38,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export function Header() {
-  const cartProducts: initialStateI[] = useSelector(
-    (state: cardGlobalStateI): initialStateI[] => state.cart
-  );
+  const cartProducts = useAppSelector((state) => state.cart);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -83,13 +80,6 @@ export function Header() {
               {...{ to: "/about", end: true }}
             >
               About
-            </StyledButton>
-            <StyledButton
-              color="inherit"
-              LinkComponent={NavLink}
-              {...{ to: "/form" }}
-            >
-              form
             </StyledButton>
             <StyledButton
               color="inherit"
