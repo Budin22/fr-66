@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { CartItem } from "./CartItem";
 import { Stack } from "@mui/material";
 import { UserInfo } from "./UserInfo";
-import { cardGlobalStateI, initialStateI } from "../redux/cart-duck";
+import { cardGlobalStateI, initialStateI } from "../../redux/cart-duck";
 import { useSelector } from "react-redux";
 
 export const CartView = () => {

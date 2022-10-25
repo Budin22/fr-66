@@ -14,27 +14,20 @@ import {
 } from "@mui/material";
 
 import { InputsI } from "./form-types";
-
-const userDevaultValue: {} = {
-  address: "",
-  address2: "",
-  checkbox: false,
-  city: "",
-  country: "",
-  delivery: "",
-  email: "",
-  firstName: "",
-  lastName: "",
-  phone: "",
-  textarea: "",
-};
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { submitForm } from "../../redux/form-duck";
 
 export const FormView = memo(() => {
+  const formValue = useAppSelector((state) => state.form);
+  console.log(formValue);
+
   const { register, handleSubmit, reset, control } = useForm<InputsI>({
-    defaultValues: userDevaultValue,
+    defaultValues: formValue,
   });
+
+  const dispatch = useAppDispatch();
   const onSubmit: SubmitHandler<InputsI> = (data) => {
-    console.log(data);
+    dispatch(submitForm(data));
     reset();
   };
 

@@ -13,8 +13,8 @@ import {
   changeNumberProduct,
   initialStateI,
   removeProduct,
-} from "../redux/cart-duck";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+} from "../../redux/cart-duck";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 interface CartItemProps {
   product: initialStateI;

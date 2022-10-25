@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 import { ProductsListSinglItem } from "./types";
 import { useSelector } from "react-redux";
-import { cardGlobalStateI, initialStateI } from "../redux/cart-duck";
+import { cardGlobalStateI, initialStateI } from "../../redux/cart-duck";
 
 export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
   const cartProducts: initialStateI[] = useSelector(

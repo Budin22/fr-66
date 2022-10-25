@@ -19,7 +19,7 @@ import {
   cardGlobalStateI,
   initialStateI,
   removeProduct,
-} from "../redux/cart-duck";
+} from "../../redux/cart-duck";
 import { useDispatch, useSelector } from "react-redux";
 
 export const ProductView = () => {

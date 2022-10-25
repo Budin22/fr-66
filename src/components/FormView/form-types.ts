@@ -1,5 +1,5 @@
-export type CountryT = "Ukraine" | "Finland" | "Poland";
-export type DeliveryT = "By wolfs" | "By rabbit" | "By duck";
+export type CountryT = "Ukraine" | "Finland" | "Poland" | "";
+export type DeliveryT = "By wolfs" | "By rabbit" | "By duck" | "";
 
 export interface InputsI {
   firstName: string;

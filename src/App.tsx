@@ -2,7 +2,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouteObject, useRoutes } from "react-router-dom";
 import { Container } from "@mui/material";
-import { store } from "./components/redux/store";
+import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
 import { Header } from "./components/Header";

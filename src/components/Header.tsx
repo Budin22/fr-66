@@ -12,7 +12,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NavLink } from "react-router-dom";
 import { Button } from "@mui/material";
-import { cardGlobalStateI, initialStateI } from "./redux/cart-duck";
+import { cardGlobalStateI, initialStateI } from "../redux/cart-duck";
 import { useSelector } from "react-redux";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
