@@ -79,7 +79,7 @@ export const CartProductsList = memo(() => {
               <Button
                 onClick={handleToggle}
                 variant="contained"
-                disabled={!formValue.checkbox}
+                disabled={!formValue.firstName}
               >
                 Make order
               </Button>

@@ -30,7 +30,7 @@ export const OrderInfo = memo(() => {
           component="h2"
           variant="h4"
         >
-          Your order
+          Your order #25 is complete! Good shopping:))
         </Typography>
         <Table
           sx={{ minWidth: 650, maxWidth: "60%", width: "100%" }}

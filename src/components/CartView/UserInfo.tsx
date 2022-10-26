@@ -27,12 +27,12 @@ export const UserInfo = memo(() => {
   return (
     <Accordion>
       <AccordionSummary
-        disabled={!checkbox}
+        disabled={!firstName}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        {checkbox ? (
+        {!!firstName ? (
           <Typography
             sx={{ textAlign: "center", width: "100%" }}
             component="h2"

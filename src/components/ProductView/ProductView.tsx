@@ -33,12 +33,23 @@ export const ProductView = memo(() => {
     (item) => +item.id === Number(params.id)
   )[0];
 
-  const someProduct: ProductItem[] = allProducts?.filter((item) =>
-    currentProduct.categories.includes(item.id)
-  );
+  const someProduct: ProductItem[] = [];
 
-  if (someProduct?.length > 3) {
-    someProduct.length = 3;
+  for (let i = 0; i < allProducts.length; i++) {
+    if (
+      allProducts[i].categories.some((item) =>
+        currentProduct.categories.includes(item)
+      ) &&
+      allProducts[i].id !== currentProduct.id &&
+      allProducts[i].isInStock
+    ) {
+      someProduct.push(allProducts[i]);
+      console.log(someProduct);
+    }
+
+    if (someProduct.length === 3) {
+      i = allProducts.length;
+    }
   }
 
   return (
