@@ -32,7 +32,7 @@ export const CartProductsList = memo(() => {
 
   const handleClose = () => {
     setOpen(false);
-    console.log(cartProducts, formValue);
+    console.log({ cart: cartProducts, userInfo: formValue });
     dispatch(removeAllProducts());
     dispatch(clearForm());
     navigate("/products");

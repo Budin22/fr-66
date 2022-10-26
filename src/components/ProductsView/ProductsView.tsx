@@ -72,7 +72,7 @@ export const ProductsView = memo(() => {
   );
 
   let currentProducts: ProductItem[] = useMemo(() => {
-    return products.filter((item: ProductItem) => {
+    return products?.filter((item: ProductItem) => {
       let result: boolean = true;
 
       if (selectedCategory.length) {
