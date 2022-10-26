@@ -11,6 +11,7 @@ import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
 import { ProductPage } from "./pages/ProductPage";
 import { CartPage } from "./pages/CartPage";
+import { FormPage } from "./pages/FormPage";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,10 @@ function App() {
     {
       path: "/products",
       element: <ProductsPage />,
+    },
+    {
+      path: "/form",
+      element: <FormPage />,
     },
     {
       path: "/about",

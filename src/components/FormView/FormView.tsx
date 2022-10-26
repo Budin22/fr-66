@@ -23,6 +23,7 @@ import * as yup from "yup";
 import { InputsI } from "./form-types";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { submitForm } from "../../redux/form-duck";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -49,6 +50,7 @@ const schema = yup
 
 export const FormView = memo(() => {
   const formValue = useAppSelector((state) => state.form);
+  const navigation = useNavigate();
   const dispatch = useAppDispatch();
   const {
     register,
@@ -72,6 +74,7 @@ export const FormView = memo(() => {
 
   const onSubmit: SubmitHandler<InputsI> = (data) => {
     dispatch(submitForm(data));
+    navigation("/products");
     reset();
   };
 

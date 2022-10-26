@@ -32,7 +32,7 @@ export const ProductsView = memo(() => {
     refetchInterval: 600000,
   });
 
-  const products = data;
+  const products: ProductItem[] = data;
 
   const ratingHandler = useCallback((rating: number[]) => {
     setRating(rating);
@@ -125,6 +125,25 @@ export const ProductsView = memo(() => {
     setPage(newPage);
   };
 
+  const limPrice: number[] = useMemo(() => {
+    if (products) {
+      const price = products.map((item) => parseInt(item.price));
+      console.log(price);
+      return [Math.min(...price), Math.max(...price)];
+    } else {
+      return [0, 5000];
+    }
+  }, [products]);
+
+  const limRating: number[] = useMemo(() => {
+    if (products) {
+      const rating = products.map((item) => item.rating);
+      return [Math.min(...rating), Math.max(...rating)];
+    } else {
+      return [0, 100];
+    }
+  }, [products]);
+
   return (
     <Box display="flex">
       <div className="card-body d-flex align-items-start p-2 flex-column col-3">
@@ -132,11 +151,15 @@ export const ProductsView = memo(() => {
           selectCategoryHandler={selectCategoryHandler}
           selectedCategory={selectedCategory}
         />
-        <Filter
-          filterHandler={filterHandler}
-          ratingHandler={ratingHandler}
-          priceHandler={priceHandler}
-        />
+        {!!currentProducts && (
+          <Filter
+            filterHandler={filterHandler}
+            ratingHandler={ratingHandler}
+            priceHandler={priceHandler}
+            rating={limRating}
+            price={limPrice}
+          />
+        )}
       </div>
       <div className="card-body d-flex align-items-center gap-3 p-2 flex-column w-100">
         <Search changeSearchValue={changeSearchValue} />

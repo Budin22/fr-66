@@ -84,6 +84,13 @@ export function Header() {
             <StyledButton
               color="inherit"
               LinkComponent={NavLink}
+              {...{ to: "/form", end: true }}
+            >
+              Form
+            </StyledButton>
+            <StyledButton
+              color="inherit"
+              LinkComponent={NavLink}
               {...{ to: "/cart" }}
             >
               cart

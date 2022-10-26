@@ -2,7 +2,6 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
 
-import { UserForm } from "./UserForm";
 import { CartProductsList } from "./CartProductsList";
 import { UserInfo } from "./UserInfo";
 
@@ -13,7 +12,6 @@ export const CartView = () => {
         Hello from cart page
       </Typography>
       <Stack spacing={2}>
-        <UserForm />
         <UserInfo />
         <CartProductsList />
       </Stack>

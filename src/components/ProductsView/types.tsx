@@ -25,6 +25,8 @@ export interface FilterProps {
   filterHandler: (filterValue: FilterValue) => void;
   ratingHandler: (rating: number[]) => void;
   priceHandler: (price: number[]) => void;
+  rating: number[];
+  price: number[];
 }
 
 export interface SearchProps {
