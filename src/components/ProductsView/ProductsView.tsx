@@ -4,7 +4,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 import { FilterValue, ProductItem } from "./types";
-import { fetchLinks } from "../Units/fetch-links";
+import { fetchLinks } from "../../api/fetch-links";
 import { Filter } from "./Filter";
 import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";

@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InputsI } from "../components/FormView/form-types";
+import { InputsI } from "../../components/FormView/form-types";
 
-type namespaceT = "form";
-
-const cartNamespace: namespaceT = "form";
+const cartNamespace = "form" as const;
 
 const initialState: InputsI = {
   address: "",

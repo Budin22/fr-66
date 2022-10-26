@@ -12,8 +12,8 @@ import { ProductPage } from "./pages/ProductPage";
 import { CartPage } from "./pages/CartPage";
 import { FormPage } from "./pages/FormPage";
 import { InputsI } from "./components/FormView/form-types";
-import { submitForm } from "./redux/form-duck";
-import { addProductsList, initialStateI } from "./redux/cart-duck";
+import { submitForm } from "./redux/ducks/form-duck";
+import { addProductsList, initialStateI } from "./redux/ducks/cart-duck";
 
 const queryClient = new QueryClient();
 

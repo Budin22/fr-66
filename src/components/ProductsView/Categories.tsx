@@ -9,7 +9,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 import { CategoriesProps, Category } from "./categories-types";
-import { fetchLinks } from "../Units/fetch-links";
+import { fetchLinks } from "../../api/fetch-links";
 
 const fetchCategories = async () => {
   return await axios

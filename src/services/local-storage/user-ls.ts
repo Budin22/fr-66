@@ -1,4 +1,4 @@
-import { InputsI } from "../components/FormView/form-types";
+import { InputsI } from "../../components/FormView/form-types";
 
 const User: "User" = "User";
 

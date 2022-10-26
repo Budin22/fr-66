@@ -9,11 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { addProduct, removeProduct } from "../../redux/cart-duck";
+import { addProduct, removeProduct } from "../../redux/ducks/cart-duck";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 import { ProductItem } from "../ProductsView/types";
-import { addProductLS, removeProductLS } from "../../LocalStorage/Cart-LS";
+import { addProductLS, removeProductLS } from "../../services/local-storage/cart-ls";
 
 interface ProductPropsI {
   data: ProductItem;

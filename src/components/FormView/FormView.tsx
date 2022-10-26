@@ -22,9 +22,9 @@ import * as yup from "yup";
 
 import { InputsI } from "./form-types";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { submitForm } from "../../redux/form-duck";
+import { submitForm } from "../../redux/ducks/form-duck";
 import { useNavigate } from "react-router-dom";
-import { submitFormLS } from "../../LocalStorage/User-LS";
+import { submitFormLS } from "../../services/local-storage/user-ls";
 
 const schema = yup
   .object({

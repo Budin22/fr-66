@@ -2,7 +2,7 @@ import {
   changeActionI,
   initialStateI,
   removeActionI,
-} from "../redux/cart-duck";
+} from "../../redux/ducks/cart-duck";
 
 const cart: "Cart" = "Cart";
 

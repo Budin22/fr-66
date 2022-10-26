@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import * as Cart from "./cart-duck";
-import * as Form from "./form-duck";
+import * as Cart from "./ducks/cart-duck";
+import * as Form from "./ducks/form-duck";
 
 export const store = configureStore({
   reducer: {

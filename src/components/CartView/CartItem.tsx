@@ -13,12 +13,12 @@ import {
   changeNumberProduct,
   initialStateI,
   removeProduct,
-} from "../../redux/cart-duck";
+} from "../../redux/ducks/cart-duck";
 import { useAppDispatch } from "../../redux/store";
 import {
   changeNumberProductLS,
   removeProductLS,
-} from "../../LocalStorage/Cart-LS";
+} from "../../services/local-storage/cart-ls";
 
 interface CartItemProps {
   product: initialStateI;

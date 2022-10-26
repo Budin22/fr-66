@@ -12,8 +12,8 @@ import Typography from "@mui/material/Typography";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import Backdrop from "@mui/material/Backdrop";
 
-import { clearForm } from "../../redux/form-duck";
-import { removeAllProducts } from "../../redux/cart-duck";
+import { clearForm } from "../../redux/ducks/form-duck";
+import { removeAllProducts } from "../../redux/ducks/cart-duck";
 import { CartItem } from "./CartItem";
 import { OrderInfo } from "./OrderInfo";
 

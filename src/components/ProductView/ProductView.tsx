@@ -4,7 +4,7 @@ import { Stack, Typography } from "@mui/material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-import { fetchLinks } from "../Units/fetch-links";
+import { fetchLinks } from "../../api/fetch-links";
 import { Product } from "./Product";
 import { ProductItem } from "../ProductsView/types";
 

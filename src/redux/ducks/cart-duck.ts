@@ -17,10 +17,6 @@ export interface removeActionI {
   index: number;
 }
 
-export interface cardGlobalStateI {
-  cart: initialStateI[];
-}
-
 type namespaceT = "cart";
 
 const cartNamespace: namespaceT = "cart";
