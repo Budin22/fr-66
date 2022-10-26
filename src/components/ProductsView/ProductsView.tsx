@@ -30,7 +30,7 @@ export const ProductsView = memo(() => {
   const [price, setPrice] = useState<number[]>([]);
 
   const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
-    refetchInterval: 600000,
+    staleTime: 60000,
   });
 
   const products: ProductItem[] = data;
@@ -144,9 +144,11 @@ export const ProductsView = memo(() => {
     }
   }, [products]);
 
+  currentProducts?.sort((a, b) => (a.isInStock < b.isInStock ? 1 : -1));
+
   return (
-    <Box display="flex" paddingTop={3}>
-      <Box width={200}>
+    <Box display="flex" paddingTop={3} columnGap={4}>
+      <Box width={250}>
         <Categories
           selectCategoryHandler={selectCategoryHandler}
           selectedCategory={selectedCategory}
@@ -161,8 +163,11 @@ export const ProductsView = memo(() => {
           />
         )}
       </Box>
-      <Box width="100%">
-        <Search changeSearchValue={changeSearchValue} />
+      <Box sx={{ width: "100%" }}>
+        <Search
+
+          changeSearchValue={changeSearchValue}
+        />
         {!products?.length && (
           <Typography
             width="100%"
@@ -177,7 +182,7 @@ export const ProductsView = memo(() => {
 
         {!isLoading && !!currentProducts.length && (
           <>
-            <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
+            <Box display="flex" flexWrap="wrap" gap={4} justifyContent="center">
               {(rowsPerPage > 0
                 ? currentProducts.slice(
                     page * rowsPerPage,

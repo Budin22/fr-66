@@ -19,7 +19,7 @@ export const Search = memo(({ changeSearchValue }: SearchProps) => {
 
   return (
     <Input
-      sx={{ alignText: "center" }}
+      sx={{ alignText: "center", marginBottom: 2 }}
       fullWidth={true}
       onChange={searchHandler}
       placeholder="Search your product by name"

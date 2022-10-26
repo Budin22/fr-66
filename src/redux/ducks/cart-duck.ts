@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface initialStateI {
+export interface InitialStateI {
   id: string;
   number: number;
   photo: string;
@@ -8,20 +8,18 @@ export interface initialStateI {
   price: string;
 }
 
-export interface changeActionI {
+export interface ChangeActionI {
   index: number;
   number: number;
 }
 
-export interface removeActionI {
+export interface RemoveActionI {
   index: number;
 }
 
-type namespaceT = "cart";
+const cartNamespace = "cart" as const;
 
-const cartNamespace: namespaceT = "cart";
-
-const initialState: initialStateI[] = [];
+const initialState: InitialStateI[] = [];
 
 export const {
   actions: {
@@ -36,16 +34,16 @@ export const {
   name: cartNamespace,
   initialState,
   reducers: {
-    addProductsList(state, action: PayloadAction<initialStateI[]>) {
+    addProductsList(state, action: PayloadAction<InitialStateI[]>) {
       return action.payload;
     },
-    addProduct(state, action: PayloadAction<initialStateI>) {
+    addProduct(state, action: PayloadAction<InitialStateI>) {
       state.push(action.payload);
     },
-    removeProduct(state, action: PayloadAction<removeActionI>) {
+    removeProduct(state, action: PayloadAction<RemoveActionI>) {
       state.splice(action.payload.index, 1);
     },
-    changeNumberProduct(state, action: PayloadAction<changeActionI>) {
+    changeNumberProduct(state, action: PayloadAction<ChangeActionI>) {
       state[action.payload.index].number = action.payload.number;
     },
     removeAllProducts(state) {

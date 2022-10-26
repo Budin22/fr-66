@@ -11,7 +11,7 @@ import { Button, ButtonGroup, TextField } from "@mui/material";
 
 import {
   changeNumberProduct,
-  initialStateI,
+  InitialStateI,
   removeProduct,
 } from "../../redux/ducks/cart-duck";
 import { useAppDispatch } from "../../redux/store";
@@ -21,7 +21,7 @@ import {
 } from "../../services/local-storage/cart-ls";
 
 interface CartItemProps {
-  product: initialStateI;
+  product: InitialStateI;
   index: number;
 }
 
@@ -30,7 +30,6 @@ export const CartItem = memo((props: CartItemProps) => {
   const index: number = props.index;
 
   const [count, setCount] = useState<number>(Number(number));
-  const [totalPrice, setTotalPrice] = useState<number>(Number(price));
 
   const dispatch = useAppDispatch();
 
@@ -39,27 +38,21 @@ export const CartItem = memo((props: CartItemProps) => {
     changeNumberProductLS({ index, number: count });
   }, [count, index, dispatch]);
 
-  const priceHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!Number.isNaN(parseInt(e.currentTarget.value))) {
-        setTotalPrice(Number(price) * parseInt(e.currentTarget.value));
-        setCount(parseInt(e.currentTarget.value));
-      }
-    },
-    [price]
-  );
+  const priceHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!Number.isNaN(parseInt(e.currentTarget.value))) {
+      setCount(parseInt(e.currentTarget.value));
+    }
+  }, []);
 
   const incHandler = useCallback(() => {
-    setTotalPrice(Number(price) * (count + 1));
     setCount((state) => state + 1);
-  }, [price, count]);
+  }, []);
 
   const decHandler = useCallback(() => {
     if (count > 1) {
-      setTotalPrice(Number(price) * (count - 1));
       setCount((state) => state - 1);
     }
-  }, [price, count]);
+  }, [count]);
 
   const removeHandler = useCallback(() => {
     dispatch(removeProduct({ index }));
@@ -145,7 +138,7 @@ export const CartItem = memo((props: CartItemProps) => {
             component="div"
             variant="h4"
           >
-            {totalPrice} $
+            {count * parseInt(price)} $
           </Typography>
         </Box>
       </CardContent>

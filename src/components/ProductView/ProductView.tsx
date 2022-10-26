@@ -18,7 +18,9 @@ export const ProductView = memo(() => {
       .catch((err) => console.log(err));
   };
 
-  const { isError, data } = useQuery(["products"], fetchProduct);
+  const { isError, data } = useQuery(["products"], fetchProduct, {
+    staleTime: 60000,
+  });
   const allProducts: ProductItem[] = data;
 
   if (!data) {

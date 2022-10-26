@@ -1,27 +1,27 @@
 import {
-  changeActionI,
-  initialStateI,
-  removeActionI,
+  ChangeActionI,
+  InitialStateI,
+  RemoveActionI,
 } from "../../redux/ducks/cart-duck";
 
-const cart: "Cart" = "Cart";
+const cart = "Cart" as const;
 
-export const addProductLS = (action: initialStateI) => {
+export const addProductLS = (action: InitialStateI) => {
   const cartData = localStorage.getItem(cart);
   if (cartData) {
-    const data: initialStateI[] = JSON.parse(cartData);
+    const data: InitialStateI[] = JSON.parse(cartData);
     data.push(action);
     localStorage.setItem(cart, JSON.stringify(data));
   } else {
-    const data: initialStateI[] = [action];
+    const data: InitialStateI[] = [action];
     localStorage.setItem(cart, JSON.stringify(data));
   }
 };
 
-export const removeProductLS = (action: removeActionI) => {
+export const removeProductLS = (action: RemoveActionI) => {
   const cartData = localStorage.getItem(cart);
   if (cartData !== null) {
-    const data: initialStateI[] = JSON.parse(cartData);
+    const data: InitialStateI[] = JSON.parse(cartData);
     data.splice(action.index, 1);
     data.length
       ? localStorage.setItem(cart, JSON.stringify(data))
@@ -29,10 +29,10 @@ export const removeProductLS = (action: removeActionI) => {
   }
 };
 
-export const changeNumberProductLS = (action: changeActionI) => {
+export const changeNumberProductLS = (action: ChangeActionI) => {
   const cartData = localStorage.getItem(cart);
   if (cartData !== null) {
-    const data: initialStateI[] = JSON.parse(cartData);
+    const data: InitialStateI[] = JSON.parse(cartData);
     data[action.index].number = action.number;
     localStorage.setItem(cart, JSON.stringify(data));
   }

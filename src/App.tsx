@@ -13,7 +13,7 @@ import { CartPage } from "./pages/CartPage";
 import { FormPage } from "./pages/FormPage";
 import { InputsI } from "./components/FormView/form-types";
 import { submitForm } from "./redux/ducks/form-duck";
-import { addProductsList, initialStateI } from "./redux/ducks/cart-duck";
+import { addProductsList, InitialStateI } from "./redux/ducks/cart-duck";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +30,7 @@ function App() {
     }
 
     if (cart) {
-      const data: initialStateI[] = JSON.parse(cart);
+      const data: InitialStateI[] = JSON.parse(cart);
       dispatch(addProductsList(data));
     }
   }, [dispatch]);

@@ -71,7 +71,7 @@ export const Categories = memo(
             </FormGroup>
             {categories.length
               ? categories.map(({ name, id }) => (
-                  <FormGroup key={id}>
+                  <FormGroup key={id} sx={{ width: "100%" }}>
                     <FormControlLabel
                       onChange={categoriesHandler}
                       control={
