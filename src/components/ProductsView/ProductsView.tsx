@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,6 +9,7 @@ import { Filter } from "./Filter";
 import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";
 import { Search } from "./Search";
+import { ProductsPagination } from "./ProductsPagination";
 
 const fetchProducts = async () => {
   return await axios
@@ -19,6 +19,9 @@ const fetchProducts = async () => {
 };
 
 export const ProductsView = memo(() => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [filterValue, setFilterValue] = useState<FilterValue>();
@@ -115,6 +118,13 @@ export const ProductsView = memo(() => {
     });
   }, [products, filterValue, price, rating, searchValue, selectedCategory]);
 
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
   return (
     <Box display="flex">
       <div className="card-body d-flex align-items-start p-2 flex-column col-3">
@@ -134,21 +144,27 @@ export const ProductsView = memo(() => {
         {!products?.length && <h5 className="card-title">Loading...</h5>}
 
         {!isLoading && !!currentProducts.length && (
-          <Box>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              textAlign="center"
-            >
-              {currentProducts.length} из {products.length}
-            </Typography>
+          <>
             <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
-              {currentProducts.map((item) => (
+              {(rowsPerPage > 0
+                ? currentProducts.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : currentProducts
+              ).map((item) => (
                 <ProductsListItem key={item.id} product={item} />
               ))}
             </Box>
-          </Box>
+            <ProductsPagination
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              count={currentProducts.length}
+              setRowsPerPage={setRowsPerPage}
+              setPage={setPage}
+            />
+          </>
         )}
 
         {!isLoading && isError && (
@@ -160,41 +176,3 @@ export const ProductsView = memo(() => {
     </Box>
   );
 });
-
-//
-// const data: number[] = [];
-//
-// for (let i = 0; i < 20; i++) {
-//   data.push(i);
-// }
-//
-// interface PagesI {
-//   numPage: number;
-//   start: number;
-//   end: number;
-// }
-
-// const divedToPages = (array: number[], etc: number): PagesI[] => {
-//   const numOfPages: number = Math.ceil(array.length / etc);
-//
-//   const pages: PagesI[] = [];
-//   let numPage: number = 1;
-//   let start: number = 0;
-//   let end: number = 0;
-//   if (array.length > 0) {
-//     for (let i = 1; i <= numOfPages; i++) {
-//       const numPage: number = i;
-//       if (i === 1) {
-//         end = array.length > end + etc ? end + etc - 1 : array.length - 1;
-//       } else {
-//         start = end + 1;
-//
-//         end = array.length > start + etc ? start + etc - 1 : array.length - 1;
-//       }
-//       pages.push({ numPage, start, end });
-//     }
-//   } else {
-//     pages.push({ numPage, start, end });
-//   }
-//   return pages;
-// };
