@@ -1,5 +1,10 @@
 import React, { memo } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  FieldError,
+} from "react-hook-form";
 import {
   Box,
   TextField,
@@ -12,19 +17,59 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { InputsI } from "./form-types";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { submitForm } from "../../redux/form-duck";
 
+const schema = yup
+  .object({
+    firstName: yup.string().trim().min(3).max(15).required(),
+    lastName: yup.string().trim().min(3).max(15).required(),
+    country: yup
+      .string()
+      .trim()
+      .oneOf(["Ukraine", "Finland", "Poland"])
+      .required(),
+    city: yup.string().trim().min(3).max(15).required(),
+    delivery: yup
+      .string()
+      .oneOf(["By wolfs", "By rabbit", "By duck"])
+      .required(),
+    email: yup.string().email().required(),
+    phone: yup.string().min(9).max(12).required(),
+    address: yup.string().trim().min(5).max(20).required(),
+    address2: yup.string().trim().min(5).max(20).required(),
+    textarea: yup.string(),
+    checkbox: yup.boolean(),
+  })
+  .required();
+
 export const FormView = memo(() => {
   const formValue = useAppSelector((state) => state.form);
-
-  const { register, handleSubmit, reset, control } = useForm<InputsI>({
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<InputsI>({
     defaultValues: formValue,
+    resolver: yupResolver(schema),
   });
 
-  const dispatch = useAppDispatch();
+  const errorHandler = () => {
+    const errorArray: [string, FieldError][] = Object.entries(errors);
+
+    if (errorArray.length) {
+      const myError: [string, FieldError] = errorArray[0];
+      alert(`${myError[0]}: ${myError[1].message}`);
+    }
+  };
+
   const onSubmit: SubmitHandler<InputsI> = (data) => {
     dispatch(submitForm(data));
     reset();
@@ -171,7 +216,12 @@ export const FormView = memo(() => {
           />
         </FormGroup>
       </Box>
-      <Button variant="contained" type="submit" sx={{ maxWidth: "25%" }}>
+      <Button
+        onClick={errorHandler}
+        variant="contained"
+        type="submit"
+        sx={{ maxWidth: "25%" }}
+      >
         Add your info
       </Button>
     </form>
