@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouteObject, useRoutes } from "react-router-dom";
 import { Container } from "@mui/material";
-import { store } from "./redux/store";
-import { Provider } from "react-redux";
+import { useAppDispatch } from "./redux/store";
 
 import { Header } from "./components/Header";
 import { ProductsPage } from "./pages/ProductsPage";
@@ -12,10 +11,30 @@ import { AboutPage } from "./pages/AboutPage";
 import { ProductPage } from "./pages/ProductPage";
 import { CartPage } from "./pages/CartPage";
 import { FormPage } from "./pages/FormPage";
+import { InputsI } from "./components/FormView/form-types";
+import { submitForm } from "./redux/form-duck";
+import { addProductsList, initialStateI } from "./redux/cart-duck";
 
 const queryClient = new QueryClient();
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const user = localStorage.getItem("User");
+    const cart = localStorage.getItem("Cart");
+
+    if (user) {
+      const data: InputsI = JSON.parse(user);
+      dispatch(submitForm(data));
+    }
+
+    if (cart) {
+      const data: initialStateI[] = JSON.parse(cart);
+      dispatch(addProductsList(data));
+    }
+  }, [dispatch]);
+
   const routes: RouteObject[] = [
     {
       path: "/",
@@ -46,14 +65,10 @@ function App() {
   const root = useRoutes(routes);
 
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <Container>
-          <Header />
-          {root}
-        </Container>
-      </QueryClientProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Header />
+      <Container sx={{ paddingTop: 8 }}>{root}</Container>
+    </QueryClientProvider>
   );
 }
 

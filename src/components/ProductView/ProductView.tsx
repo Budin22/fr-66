@@ -44,7 +44,6 @@ export const ProductView = memo(() => {
       allProducts[i].isInStock
     ) {
       someProduct.push(allProducts[i]);
-      console.log(someProduct);
     }
 
     if (someProduct.length === 3) {

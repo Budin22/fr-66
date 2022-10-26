@@ -10,6 +10,7 @@ import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";
 import { Search } from "./Search";
 import { ProductsPagination } from "./ProductsPagination";
+import Typography from "@mui/material/Typography";
 
 const fetchProducts = async () => {
   return await axios
@@ -20,7 +21,7 @@ const fetchProducts = async () => {
 
 export const ProductsView = memo(() => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+  const [rowsPerPage, setRowsPerPage] = React.useState(9);
 
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -128,7 +129,6 @@ export const ProductsView = memo(() => {
   const limPrice: number[] = useMemo(() => {
     if (products) {
       const price = products.map((item) => parseInt(item.price));
-      console.log(price);
       return [Math.min(...price), Math.max(...price)];
     } else {
       return [0, 5000];
@@ -145,8 +145,8 @@ export const ProductsView = memo(() => {
   }, [products]);
 
   return (
-    <Box display="flex">
-      <div className="card-body d-flex align-items-start p-2 flex-column col-3">
+    <Box display="flex" paddingTop={3}>
+      <Box width={200}>
         <Categories
           selectCategoryHandler={selectCategoryHandler}
           selectedCategory={selectedCategory}
@@ -160,11 +160,20 @@ export const ProductsView = memo(() => {
             price={limPrice}
           />
         )}
-      </div>
-      <div className="card-body d-flex align-items-center gap-3 p-2 flex-column w-100">
+      </Box>
+      <Box width="100%">
         <Search changeSearchValue={changeSearchValue} />
-
-        {!products?.length && <h5 className="card-title">Loading...</h5>}
+        {!products?.length && (
+          <Typography
+            width="100%"
+            sx={{ textAlign: "center", padding: 2 }}
+            color="steelblue"
+            component="h4"
+            variant="h3"
+          >
+            Loading...
+          </Typography>
+        )}
 
         {!isLoading && !!currentProducts.length && (
           <>
@@ -191,11 +200,17 @@ export const ProductsView = memo(() => {
         )}
 
         {!isLoading && isError && (
-          <h5 className="card-title" style={{ color: "red" }}>
-            {"Something went wrong"}
-          </h5>
+          <Typography
+            width="100%"
+            sx={{ textAlign: "center", padding: 2 }}
+            color="red"
+            component="h4"
+            variant="h3"
+          >
+            Something went wrong
+          </Typography>
         )}
-      </div>
+      </Box>
     </Box>
   );
 });

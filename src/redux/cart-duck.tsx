@@ -33,12 +33,16 @@ export const {
     removeProduct,
     changeNumberProduct,
     removeAllProducts,
+    addProductsList,
   },
   reducer,
 } = createSlice({
   name: cartNamespace,
   initialState,
   reducers: {
+    addProductsList(state, action: PayloadAction<initialStateI[]>) {
+      return action.payload;
+    },
     addProduct(state, action: PayloadAction<initialStateI>) {
       state.push(action.payload);
     },

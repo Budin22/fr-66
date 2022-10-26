@@ -13,6 +13,7 @@ import { addProduct, removeProduct } from "../../redux/cart-duck";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 import { ProductItem } from "../ProductsView/types";
+import { addProductLS, removeProductLS } from "../../LocalStorage/Cart-LS";
 
 interface ProductPropsI {
   data: ProductItem;
@@ -39,8 +40,10 @@ export const Product = memo((props: ProductPropsI) => {
     const index: number = cartProducts.findIndex((item) => item.id === id);
     if (index > -1) {
       dispatch(removeProduct({ index }));
+      removeProductLS({ index });
     } else {
       dispatch(addProduct({ id, number: 1, photo, title, price }));
+      addProductLS({ id, number: 1, photo, title, price });
     }
   }, [cartProducts, id, photo, price, dispatch, title]);
 

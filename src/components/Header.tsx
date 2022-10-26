@@ -41,8 +41,8 @@ export function Header() {
   const cartProducts = useAppSelector((state) => state.cart);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1 }} position="relative">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             variant="h6"

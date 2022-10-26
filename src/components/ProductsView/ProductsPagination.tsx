@@ -84,8 +84,7 @@ export const ProductsPagination = memo((props: TablePaginationActionsProps) => {
           id="demo-customized-select-native"
           defaultValue="6"
         >
-          <option value="6">6</option>
-          <option value="12">12</option>
+          <option value="9">9</option>
           <option value="24">24</option>
           <option value="48">48</option>
           <option value="all">All</option>

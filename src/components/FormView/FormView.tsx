@@ -24,6 +24,7 @@ import { InputsI } from "./form-types";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { submitForm } from "../../redux/form-duck";
 import { useNavigate } from "react-router-dom";
+import { submitFormLS } from "../../LocalStorage/User-LS";
 
 const schema = yup
   .object({
@@ -74,17 +75,14 @@ export const FormView = memo(() => {
 
   const onSubmit: SubmitHandler<InputsI> = (data) => {
     dispatch(submitForm(data));
+    submitFormLS(data);
     navigation("/products");
     reset();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="row g-3 needs-validation"
-      noValidate
-    >
-      <Box display="flex" gap={3}>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Box display="flex" gap={3} marginTop={3}>
         <TextField
           sx={{ minWidth: "25%" }}
           label="First name"
