@@ -11,6 +11,8 @@ import { ProductsListItem } from "./ProductsListItem";
 import { Search } from "./Search";
 import { ProductsPagination } from "./ProductsPagination";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "./useDebounce";
 
 const fetchProducts = async () => {
   return await axios
@@ -20,6 +22,7 @@ const fetchProducts = async () => {
 };
 
 export const ProductsView = memo(() => {
+  const navigation = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(9);
 
@@ -28,6 +31,7 @@ export const ProductsView = memo(() => {
   const [filterValue, setFilterValue] = useState<FilterValue>();
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
+  const debouncedSearch = useDebounce(searchValue, 300);
 
   const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
     staleTime: 60000,
@@ -86,10 +90,10 @@ export const ProductsView = memo(() => {
             .length;
       }
 
-      if (result && searchValue) {
+      if (result && debouncedSearch) {
         result =
           result &&
-          item.title.toLowerCase().includes(searchValue.toLocaleString());
+          item.title.toLowerCase().includes(debouncedSearch.toLocaleString());
       }
 
       if (result && filterValue?.isNew) {
@@ -117,7 +121,7 @@ export const ProductsView = memo(() => {
 
       return result;
     });
-  }, [products, filterValue, price, rating, searchValue, selectedCategory]);
+  }, [products, filterValue, price, rating, debouncedSearch, selectedCategory]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -144,6 +148,21 @@ export const ProductsView = memo(() => {
     }
   }, [products]);
 
+  if (isError) {
+    setTimeout(() => navigation("/"), 2000);
+    return (
+      <Typography
+        gutterBottom
+        variant="h5"
+        component="h6"
+        color="darkred"
+        sx={{ textAlign: "center" }}
+      >
+        Some thing went wrong
+      </Typography>
+    );
+  }
+
   currentProducts?.sort((a, b) => (a.isInStock < b.isInStock ? 1 : -1));
 
   return (
@@ -164,10 +183,7 @@ export const ProductsView = memo(() => {
         )}
       </Box>
       <Box sx={{ width: "100%" }}>
-        <Search
-
-          changeSearchValue={changeSearchValue}
-        />
+        <Search changeSearchValue={changeSearchValue} />
         {!products?.length && (
           <Typography
             width="100%"
@@ -202,18 +218,6 @@ export const ProductsView = memo(() => {
               setPage={setPage}
             />
           </>
-        )}
-
-        {!isLoading && isError && (
-          <Typography
-            width="100%"
-            sx={{ textAlign: "center", padding: 2 }}
-            color="red"
-            component="h4"
-            variant="h3"
-          >
-            Something went wrong
-          </Typography>
         )}
       </Box>
     </Box>

@@ -4,9 +4,13 @@ import * as Cart from "./ducks/cart-duck";
 import * as Form from "./ducks/form-duck";
 import { InputsI } from "../components/FormView/form-types";
 import { InitialStateI } from "./ducks/cart-duck";
+import { initialState } from "./ducks/form-duck";
 
 const cart: InitialStateI[] = JSON.parse(localStorage.getItem("cart") || "[]");
-const form: InputsI = JSON.parse(localStorage.getItem("form") || "{}");
+const form: InputsI =
+  JSON.parse(localStorage.getItem("form") || "") === undefined
+    ? JSON.parse(localStorage.getItem("form") || "")
+    : initialState;
 
 export const store = configureStore({
   reducer: {

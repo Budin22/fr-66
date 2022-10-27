@@ -3,7 +3,7 @@ import { InputsI } from "../../components/FormView/form-types";
 
 const cartNamespace = "form" as const;
 
-const initialState: InputsI = {
+export const initialState: InputsI = {
   address: "",
   address2: "",
   checkbox: false,

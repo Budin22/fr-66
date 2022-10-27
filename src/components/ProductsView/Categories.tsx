@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CategoriesProps, Category } from "./categories-types";
 import { fetchLinks } from "../../api/fetch-links";
+import { useNavigate } from "react-router-dom";
 
 const fetchCategories = async () => {
   return await axios
@@ -21,7 +22,7 @@ const fetchCategories = async () => {
 export const Categories = memo(
   ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
     const [checkedAll, setCheckedAll] = useState(true);
-
+    const navigation = useNavigate();
     const { isError, isLoading, data } = useQuery(
       ["categories"],
       fetchCategories,
@@ -48,14 +49,33 @@ export const Categories = memo(
       setCheckedAll((state) => !state);
     }, [selectCategoryHandler]);
 
+    if (isError) {
+      setTimeout(() => navigation("/"), 2000);
+      return (
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="h6"
+          color="darkred"
+          sx={{ textAlign: "center" }}
+        >
+          Some thing went wrong
+        </Typography>
+      );
+    }
+
     return (
       <>
         {isLoading && (
-          <Typography variant="h5" component="h6">
+          <Typography
+            variant="h5"
+            component="h6"
+            color="steelblue"
+            sx={{ textAlign: "center" }}
+          >
             Loading...
           </Typography>
         )}
-
         {!isLoading && categories?.length && (
           <>
             <Typography variant="h5" component="h6">
@@ -87,12 +107,6 @@ export const Categories = memo(
                 ))
               : null}
           </>
-        )}
-
-        {!isLoading && isError && (
-          <h5 className="card-title" style={{ color: "red" }}>
-            {isError || "Something went wrong"}
-          </h5>
         )}
       </>
     );

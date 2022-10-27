@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Stack, Typography } from "@mui/material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -9,19 +9,37 @@ import { Product } from "./Product";
 import { ProductItem } from "../ProductsView/types";
 
 export const ProductView = memo(() => {
+  const navigation = useNavigate();
   const params = useParams();
 
   const fetchProduct = async () => {
     return await axios
       .get(fetchLinks.products)
       .then((res) => res.data)
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        throw Error(err.massage);
+      });
   };
 
   const { isError, data } = useQuery(["products"], fetchProduct, {
     staleTime: 60000,
   });
   const allProducts: ProductItem[] = data;
+
+  if (isError) {
+    setTimeout(() => navigation(-1), 2000);
+    return (
+      <Typography
+        gutterBottom
+        variant="h5"
+        component="h6"
+        color="darkred"
+        sx={{ textAlign: "center" }}
+      >
+        Some thing went wrong
+      </Typography>
+    );
+  }
 
   if (!data) {
     return (
