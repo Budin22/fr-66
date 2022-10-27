@@ -31,6 +31,7 @@ export const ProductsView = memo(() => {
   const [filterValue, setFilterValue] = useState<FilterValue>();
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
+
   const debouncedSearch = useDebounce(searchValue, 300);
   const debouncedCategory = useDebounce(selectedCategory, 500);
   const debouncedFilterValue = useDebounce(filterValue, 500);

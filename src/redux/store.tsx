@@ -7,10 +7,9 @@ import { InitialStateI } from "./ducks/cart-duck";
 import { initialState } from "./ducks/form-duck";
 
 const cart: InitialStateI[] = JSON.parse(localStorage.getItem("cart") || "[]");
-const form: InputsI =
-  JSON.parse(localStorage.getItem("form") || "") === undefined
-    ? JSON.parse(localStorage.getItem("form") || "")
-    : initialState;
+const form: InputsI = localStorage.getItem("form")
+  ? JSON.parse(localStorage.getItem("form") || "")
+  : initialState;
 
 export const store = configureStore({
   reducer: {
