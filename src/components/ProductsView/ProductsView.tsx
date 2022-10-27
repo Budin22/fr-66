@@ -32,6 +32,10 @@ export const ProductsView = memo(() => {
   const [rating, setRating] = useState<number[]>([]);
   const [price, setPrice] = useState<number[]>([]);
   const debouncedSearch = useDebounce(searchValue, 300);
+  const debouncedCategory = useDebounce(selectedCategory, 500);
+  const debouncedFilterValue = useDebounce(filterValue, 500);
+  const debouncedRating = useDebounce(rating, 500);
+  const debouncedPrice = useDebounce(price, 500);
 
   const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
     staleTime: 60000,
@@ -83,10 +87,10 @@ export const ProductsView = memo(() => {
     return products?.filter((item: ProductItem) => {
       let result: boolean = true;
 
-      if (selectedCategory.length) {
+      if (debouncedCategory.length) {
         result =
           result &&
-          !!selectedCategory.filter((cat) => item.categories.includes(cat))
+          !!debouncedCategory.filter((cat) => item.categories.includes(cat))
             .length;
       }
 
@@ -96,32 +100,42 @@ export const ProductsView = memo(() => {
           item.title.toLowerCase().includes(debouncedSearch.toLocaleString());
       }
 
-      if (result && filterValue?.isNew) {
+      if (result && debouncedFilterValue?.isNew) {
         result = result && item.isNew;
       }
 
-      if (result && filterValue?.isSale) {
+      if (result && debouncedFilterValue?.isSale) {
         result = result && item.isSale;
       }
 
-      if (result && filterValue?.isInStock) {
+      if (result && debouncedFilterValue?.isInStock) {
         result = result && item.isInStock;
       }
 
       if (result) {
         result =
           result &&
-          parseInt(item.price) <= price[1] &&
-          price[0] <= parseInt(item.price);
+          parseInt(item.price) <= debouncedPrice[1] &&
+          debouncedPrice[0] <= parseInt(item.price);
       }
 
       if (result) {
-        result = result && item.rating <= rating[1] && rating[0] <= item.rating;
+        result =
+          result &&
+          item.rating <= debouncedRating[1] &&
+          debouncedRating[0] <= item.rating;
       }
 
       return result;
     });
-  }, [products, filterValue, price, rating, debouncedSearch, selectedCategory]);
+  }, [
+    products,
+    debouncedFilterValue,
+    debouncedPrice,
+    debouncedRating,
+    debouncedSearch,
+    debouncedCategory,
+  ]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
