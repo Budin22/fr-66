@@ -16,8 +16,6 @@ import { clearForm } from "../../redux/ducks/form-duck";
 import { removeAllProducts } from "../../redux/ducks/cart-duck";
 import { CartItem } from "./CartItem";
 import { OrderInfo } from "./OrderInfo";
-import { removeAllProductLS } from "../../services/local-storage/cart-ls";
-import { clearFormLS } from "../../services/local-storage/user-ls";
 
 export const CartProductsList = memo(() => {
   const [open, setOpen] = useState(false);
@@ -36,9 +34,9 @@ export const CartProductsList = memo(() => {
     setOpen(false);
     console.log({ cart: cartProducts, userInfo: formValue });
     dispatch(removeAllProducts());
-    removeAllProductLS();
     dispatch(clearForm());
-    clearFormLS();
+    localStorage.removeItem("cart");
+    localStorage.removeItem("form");
     navigate("/products");
   };
 

@@ -15,10 +15,6 @@ import {
   removeProduct,
 } from "../../redux/ducks/cart-duck";
 import { useAppDispatch } from "../../redux/store";
-import {
-  changeNumberProductLS,
-  removeProductLS,
-} from "../../services/local-storage/cart-ls";
 
 interface CartItemProps {
   product: InitialStateI;
@@ -35,7 +31,6 @@ export const CartItem = memo((props: CartItemProps) => {
 
   useEffect(() => {
     dispatch(changeNumberProduct({ index, number: count }));
-    changeNumberProductLS({ index, number: count });
   }, [count, index, dispatch]);
 
   const priceHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +51,6 @@ export const CartItem = memo((props: CartItemProps) => {
 
   const removeHandler = useCallback(() => {
     dispatch(removeProduct({ index }));
-    removeProductLS({ index });
   }, [dispatch, index]);
 
   return (

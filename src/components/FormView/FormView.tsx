@@ -24,7 +24,6 @@ import { InputsI } from "./form-types";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { submitForm } from "../../redux/ducks/form-duck";
 import { useNavigate } from "react-router-dom";
-import { submitFormLS } from "../../services/local-storage/user-ls";
 
 const schema = yup
   .object({
@@ -75,7 +74,6 @@ export const FormView = memo(() => {
 
   const onSubmit: SubmitHandler<InputsI> = (data) => {
     dispatch(submitForm(data));
-    submitFormLS(data);
     navigation("/products");
     reset();
   };
