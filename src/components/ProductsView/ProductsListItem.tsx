@@ -10,10 +10,10 @@ import {
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
-import { ProductsListSinglItem } from "./types";
+import { TProductsObj } from "./types";
 import { useIsInCart } from "../../hooks/hooks";
 
-export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
+export const ProductsListItem = memo(({ product }: TProductsObj) => {
   const isInCart = useIsInCart();
   const {
     photo,

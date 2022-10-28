@@ -9,20 +9,25 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { addProduct, removeProduct } from "../../redux/ducks/cart-duck";
-import { useAppDispatch } from "../../redux/store";
 
-import { ProductItem } from "../ProductsView/types";
-import { useIsInCart, useSelectorAll } from "../../hooks/hooks";
+import { TProduct } from "../ProductsView/types";
+import {
+  useDispatchAddProduct,
+  useDispatchRemoveProduct,
+  useIsInCart,
+  useSelectorAll,
+} from "../../hooks/hooks";
 
 interface ProductPropsI {
-  data: ProductItem;
+  data: TProduct;
   isError: boolean;
 }
 
 export const Product = memo((props: ProductPropsI) => {
   const isInCart = useIsInCart();
-  const dispatch = useAppDispatch();
+  const dispatchAddProduct = useDispatchAddProduct();
+  const dispatchRemoveProduct = useDispatchRemoveProduct();
+
   const { cart } = useSelectorAll();
 
   const {
@@ -35,17 +40,25 @@ export const Product = memo((props: ProductPropsI) => {
     price,
     title,
     description,
-  }: ProductItem = props.data;
+  }: TProduct = props.data;
   const isError = props.isError;
 
   const productHandler = useCallback(() => {
     const index: number = cart.findIndex((item) => item.id === id);
     if (index > -1) {
-      dispatch(removeProduct({ index }));
+      dispatchRemoveProduct({ index });
     } else {
-      dispatch(addProduct({ id, number: 1, photo, title, price }));
+      dispatchAddProduct({ id, number: 1, photo, title, price });
     }
-  }, [cart, id, photo, price, dispatch, title]);
+  }, [
+    cart,
+    id,
+    photo,
+    price,
+    dispatchAddProduct,
+    dispatchRemoveProduct,
+    title,
+  ]);
 
   return !isError ? (
     <Card

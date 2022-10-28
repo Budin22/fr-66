@@ -1,4 +1,4 @@
-export interface ProductItem {
+export type TProduct = {
   photo: string;
   title: string;
   description: string;
@@ -9,13 +9,15 @@ export interface ProductItem {
   isSale: boolean;
   isInStock: boolean;
   categories: string[];
+};
+
+export type TProductsList = Array<TProduct>
+
+export type TProductsObj = {
+  product: TProduct;
 }
 
-export interface ProductsListSinglItem {
-  product: ProductItem;
-}
-
-export interface FilterProps {
+export type TFilterProps = {
   ratingChange: (rating: number[]) => void;
   priceChange: (price: number[]) => void;
   rating: number[];
@@ -30,7 +32,7 @@ export interface FilterProps {
   isInStock: boolean;
 }
 
-export interface SearchProps {
+export type TSearchProps = {
   changeSearchValue: (value: string) => void;
   searchValue: string;
 }

@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
@@ -9,39 +9,20 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import Backdrop from "@mui/material/Backdrop";
 
 import { CartItem } from "./CartItem";
-import { OrderInfo } from "./OrderInfo";
-import {
-  useDispatchClearForm,
-  useDispatchRemoveAllProducts,
-  useSelectorAll,
-} from "../../hooks/hooks";
+import { useSelectorAll } from "../../hooks/hooks";
 
 export const CartProductsList = memo(() => {
-  const [open, setOpen] = useState(false);
-  const { cart, form } = useSelectorAll();
-  const dispatchClearForm = useDispatchClearForm();
-  const dispatchRemoveAllProducts = useDispatchRemoveAllProducts();
-
+  const { cart } = useSelectorAll();
   const navigate = useNavigate();
-
   const totalPrice = useMemo(
     () => cart.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
     [cart]
   );
 
-  const handleClose = () => {
-    setOpen(false);
-    console.log({ cart, userInfo: form });
-    dispatchRemoveAllProducts();
-    dispatchClearForm();
-    navigate("/products");
-  };
-
-  const handleToggle = () => {
-    setOpen(!open);
+  const orderHandler = () => {
+    navigate("/form");
   };
 
   return (
@@ -77,25 +58,9 @@ export const CartProductsList = memo(() => {
             >
               Total price: {totalPrice} $
             </Typography>
-            <>
-              <Button
-                onClick={handleToggle}
-                variant="contained"
-                disabled={!form.firstName}
-              >
-                Make order
-              </Button>
-              <Backdrop
-                sx={{
-                  color: "#fff",
-                  zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={open}
-                onClick={handleClose}
-              >
-                <OrderInfo />
-              </Backdrop>
-            </>
+            <Button onClick={orderHandler} variant="contained">
+              Make order
+            </Button>
           </Box>
         </>
       ) : (

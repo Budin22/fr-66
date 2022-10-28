@@ -2,25 +2,14 @@ import { RootState, useAppDispatch, useAppSelector } from "../redux/store";
 import { useCallback, useMemo } from "react";
 import {
   addProduct,
-  addProductsList,
   TChangeNumberAction,
   changeNumberProduct,
   TRemoveProductAction,
   removeAllProducts,
-  removeProduct, TInitialS, TInitialState,
+  removeProduct, TInitialState,
 } from "../redux/ducks/cart-duck";
 import { TOrder } from "../components/FormView/form-types";
 import { clearForm, submitForm } from "../redux/ducks/form-duck";
-
-export const useDispatchAddProductsList = () => {
-  const dispatch = useAppDispatch();
-  return useCallback(
-    (action: TInitialS) => {
-      dispatch(addProductsList(action));
-    },
-    [dispatch]
-  );
-};
 
 export const useDispatchAddProduct = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +21,7 @@ export const useDispatchAddProduct = () => {
   );
 };
 
-export const useDispatchRemoveProductsList = () => {
+export const useDispatchRemoveProduct = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     (action: TRemoveProductAction) => {

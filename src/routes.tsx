@@ -5,6 +5,8 @@ import { FormPage } from "./pages/FormPage";
 import { AboutPage } from "./pages/AboutPage";
 import { CartPage } from "./pages/CartPage";
 import { ProductPage } from "./pages/ProductPage";
+import { OrderPage } from "./pages/OrderPage";
+import { OrderComplete } from "./components/OrderView/OrderComplete";
 
 export const routes: RouteObject[] = [
   {
@@ -26,6 +28,19 @@ export const routes: RouteObject[] = [
   {
     path: "/cart",
     element: <CartPage />,
+  },
+  {
+    path: "/order",
+    element: <OrderPage />,
+  },
+  {
+    path: "/order",
+    children: [
+      {
+        path: "done",
+        element: <OrderComplete />,
+      },
+    ],
   },
   {
     path: "/product/:id",

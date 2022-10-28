@@ -9,9 +9,9 @@ import {
   TextField,
 } from "@mui/material";
 
-import { FilterProps } from "./types";
+import { TFilterProps } from "./types";
 
-export const Filter = memo((props: FilterProps) => {
+export const Filter = memo((props: TFilterProps) => {
   const {
     ratingChange,
     priceChange,

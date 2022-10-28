@@ -3,21 +3,21 @@ import { useParams } from "react-router-dom";
 import { Stack, Typography } from "@mui/material";
 
 import { Product } from "./Product";
-import { ProductItem } from "../ProductsView/types";
+import { TProduct, TProductsList } from "../ProductsView/types";
 import { useProductsQuery } from "../../hooks/useProductsQuery";
 
 export const ProductView = memo(() => {
   const params = useParams();
 
   const { isError, data } = useProductsQuery();
-  let allProducts: ProductItem[] = useMemo(() => (data ? data : []), [data]);
+  let allProducts: TProductsList = useMemo(() => (data ? data : []), [data]);
 
-  const currentProduct: ProductItem = useMemo(
+  const currentProduct: TProduct = useMemo(
     () => allProducts?.filter((item) => +item.id === Number(params.id))[0],
     [allProducts, params.id]
   );
 
-  const someProduct: ProductItem[] = [];
+  const someProduct: TProductsList = [];
 
   for (let i = 0; i < allProducts.length; i++) {
     if (

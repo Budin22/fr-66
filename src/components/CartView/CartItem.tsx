@@ -12,7 +12,7 @@ import { Button, ButtonGroup, TextField } from "@mui/material";
 import { TInitialState } from "../../redux/ducks/cart-duck";
 import {
   useDispatchChangeNumberProduct,
-  useDispatchRemoveProductsList,
+  useDispatchRemoveProduct,
 } from "../../hooks/hooks";
 
 interface CartItemProps {
@@ -23,11 +23,10 @@ interface CartItemProps {
 export const CartItem = memo((props: CartItemProps) => {
   const { id, number, price, title, photo } = props.product;
   const index: number = props.index;
-
   const [count, setCount] = useState<number>(Number(number));
 
   const dispatchChangeNumberProduct = useDispatchChangeNumberProduct();
-  const dispatchRemoveProductsList = useDispatchRemoveProductsList();
+  const dispatchRemoveProductsList = useDispatchRemoveProduct();
 
   const priceHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

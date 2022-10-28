@@ -1,10 +1,10 @@
 import React, { memo, useCallback } from "react";
 import { Input } from "@mui/material";
 
-import { SearchProps } from "./types";
+import { TSearchProps } from "./types";
 
 export const Search = memo(
-  ({ changeSearchValue, searchValue }: SearchProps) => {
+  ({ changeSearchValue, searchValue }: TSearchProps) => {
     const searchHandler = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         changeSearchValue(e.currentTarget.value);

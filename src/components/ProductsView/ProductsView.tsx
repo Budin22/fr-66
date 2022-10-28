@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 
-import { ProductItem } from "./types";
+import { TProduct, TProductsList } from "./types";
 import { Filter } from "./Filter";
 import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";
@@ -9,7 +9,7 @@ import { Search } from "./Search";
 import { ProductsPagination } from "./ProductsPagination";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { useDebounce } from "./useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 import { useProductsQuery } from "../../hooks/useProductsQuery";
 
 export const ProductsView = memo(() => {
@@ -38,7 +38,7 @@ export const ProductsView = memo(() => {
 
   const { isError, isLoading, data } = useProductsQuery();
 
-  const products: ProductItem[] = useMemo(() => (data ? data : []), [data]);
+  const products: TProductsList = useMemo(() => (data ? data : []), [data]);
 
   const isNewChange = useCallback((isNew: boolean) => {
     setIsNew(isNew);
@@ -86,8 +86,8 @@ export const ProductsView = memo(() => {
     []
   );
 
-  let currentProducts: ProductItem[] = useMemo(() => {
-    return products?.filter((item: ProductItem) => {
+  let currentProducts: TProduct[] = useMemo(() => {
+    return products?.filter((item: TProduct) => {
       let result: boolean = true;
 
       if (debouncedCategory.length) {

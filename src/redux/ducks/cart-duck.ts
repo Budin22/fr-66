@@ -29,16 +29,12 @@ export const {
     removeProduct,
     changeNumberProduct,
     removeAllProducts,
-    addProductsList,
   },
   reducer,
 } = createSlice({
   name: namespace,
   initialState,
   reducers: {
-    addProductsList(state, action: PayloadAction<TInitialS>) {
-      return action.payload;
-    },
     addProduct(state, action: PayloadAction<TInitialState>) {
       state.push(action.payload);
     },
