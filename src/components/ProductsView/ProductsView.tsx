@@ -23,8 +23,8 @@ const fetchProducts = async () => {
 
 export const ProductsView = memo(() => {
   const navigation = useNavigate();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(9);
 
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");

@@ -6,6 +6,8 @@ import { CartProductsList } from "./CartProductsList";
 import { UserInfo } from "./UserInfo";
 
 export const CartView = () => {
+
+
   return (
     <>
       <Typography gutterBottom variant="h1" component="h1" textAlign="center">

@@ -49,6 +49,7 @@ const schema = yup
   .required();
 
 export const FormView = memo(() => {
+    
   const formValue = useAppSelector((state) => state.form);
   const navigation = useNavigate();
   const dispatch = useAppDispatch();
@@ -85,6 +86,7 @@ export const FormView = memo(() => {
           sx={{ minWidth: "25%" }}
           label="First name"
           variant="standard"
+          inputRef={}
           {...register("firstName")}
         />
         <TextField
