@@ -12,6 +12,7 @@ export const ProductView = memo(() => {
   const navigation = useNavigate();
   const params = useParams();
 
+  // вынести это в src/api/catalog-api.ts
   const fetchProduct = async () => {
     return await axios
       .get(fetchLinks.products)
@@ -21,12 +22,14 @@ export const ProductView = memo(() => {
       });
   };
 
+  // вынести это в отдельный хук src/hooks/useProductsQuery.ts
   const { isError, data } = useQuery(["products"], fetchProduct, {
     staleTime: 60000,
   });
   const allProducts: ProductItem[] = data;
 
   if (isError) {
+    // не согласен с редиректом через 2 секунды - юзер просто не поймет, что произошло
     setTimeout(() => navigation(-1), 2000);
     return (
       <Typography
@@ -49,6 +52,7 @@ export const ProductView = memo(() => {
     );
   }
 
+  // вынести все это в useMemo и поставить перед рендером
   const currentProduct: ProductItem = allProducts?.filter(
     (item) => +item.id === Number(params.id)
   )[0];

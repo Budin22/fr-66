@@ -3,6 +3,7 @@ import { Input } from "@mui/material";
 
 import { SearchProps } from "./types";
 
+// тут не хватает текущего значения поиска из пропсов, иначе у тебя получается неконтролируемый инпут
 export const Search = memo(({ changeSearchValue }: SearchProps) => {
   const [value, setValue] = useState("");
 
@@ -14,6 +15,7 @@ export const Search = memo(({ changeSearchValue }: SearchProps) => {
   );
 
   useEffect(() => {
+    // зачем? можно же сразу в хендлере вызывать changeSearchValue
     changeSearchValue(value);
   }, [value, changeSearchValue]);
 

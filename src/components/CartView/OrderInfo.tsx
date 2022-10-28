@@ -11,9 +11,9 @@ import { Box, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/store";
 
 export const OrderInfo = memo(() => {
-  const orderProducts = useAppSelector((state) => state.cart);
+  const orderProducts = useAppSelector((state) => state.cart); // отдельный селектор + хук
   const totalPrice = useMemo(
-    () => orderProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    () => orderProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0), // отдельный селектор + хук
     [orderProducts]
   );
 

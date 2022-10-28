@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { InputsI } from "../../components/FormView/form-types";
 
+// just "namespace"
 const cartNamespace = "form" as const;
 
+// я бы сделал отдельный тип Order
 export const initialState: InputsI = {
   address: "",
   address2: "",

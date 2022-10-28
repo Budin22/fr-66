@@ -49,7 +49,7 @@ const schema = yup
   .required();
 
 export const FormView = memo(() => {
-  const formValue = useAppSelector((state) => state.form);
+  const formValue = useAppSelector((state) => state.form); // отдельный селектор + хук
   const navigation = useNavigate();
   const dispatch = useAppDispatch();
   const {
@@ -64,6 +64,7 @@ export const FormView = memo(() => {
   });
 
   const errorHandler = () => {
+    // вместо этого я бы сделал отображение ошибок в реальном времени под каждым инпутом
     const errorArray: [string, FieldError][] = Object.entries(errors);
 
     if (errorArray.length) {
@@ -73,8 +74,8 @@ export const FormView = memo(() => {
   };
 
   const onSubmit: SubmitHandler<InputsI> = (data) => {
-    dispatch(submitForm(data));
-    navigation("/products");
+    dispatch(submitForm(data)); // отдельный хук
+    navigation("/products"); // нет, просто сообщение что заказ создан
     reset();
   };
 

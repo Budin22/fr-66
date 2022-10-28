@@ -21,6 +21,7 @@ interface ProductPropsI {
 
 export const Product = memo((props: ProductPropsI) => {
   const dispatch = useAppDispatch();
+  // вынести этов отдельный селектор и отдельных хук
   const cartProducts = useAppSelector((state) => state.cart);
   const {
     photo,
@@ -35,6 +36,7 @@ export const Product = memo((props: ProductPropsI) => {
   }: ProductItem = props.data;
   const isError = props.isError;
 
+  // с маленькой буквы :)
   const ProductHandler = useCallback(() => {
     const index: number = cartProducts.findIndex((item) => item.id === id);
     if (index > -1) {
@@ -109,6 +111,7 @@ export const Product = memo((props: ProductPropsI) => {
           color="success"
           LinkComponent={Link}
         >
+          {/* это я бы рекомендовал вынести в селектор selectIsInCart и в отдельный хук useIsProductInCart */}
           {!!cartProducts.find((item) => item.id === id)
             ? "Remove from cart"
             : "Add to cart"}
