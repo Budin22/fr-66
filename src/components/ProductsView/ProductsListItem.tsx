@@ -11,10 +11,10 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 import { ProductsListSinglItem } from "./types";
-import { useAppSelector } from "../../redux/store";
+import { useIsInCart } from "../../hooks/hooks";
 
 export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
-  const cartProducts = useAppSelector((state) => state.cart);
+  const isInCart = useIsInCart();
   const {
     photo,
     title,
@@ -94,10 +94,7 @@ export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
           LinkComponent={Link}
           {...{ to: url }}
         >
-          Show{" "}
-          {cartProducts.find((item) => item.id === id)
-            ? "(Product in cart)"
-            : ""}
+          Show {isInCart(id) ? "(Product in cart)" : ""}
         </Button>
       </CardActions>
     </Card>

@@ -5,33 +5,15 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
-import { CategoriesProps, Category } from "./categories-types";
-import { fetchLinks } from "../../api/fetch-links";
-import { useNavigate } from "react-router-dom";
-
-const fetchCategories = async () => {
-  return await axios
-    .get(fetchLinks.categories)
-    .then((res) => res.data)
-    .catch((err) => console.log(err));
-};
+import { CategoriesProps } from "./categories-types";
+import { useProductsQuery } from "../../hooks/useCatalogQuery";
 
 export const Categories = memo(
   ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
     const [checkedAll, setCheckedAll] = useState(true);
-    const navigation = useNavigate();
-    const { isError, isLoading, data } = useQuery(
-      ["categories"],
-      fetchCategories,
-      {
-        staleTime: 60000,
-      }
-    );
-
-    const categories: Category[] = data;
+    const { isError, isLoading, data } = useProductsQuery();
+    const categories = data;
 
     const categoriesHandler = useCallback(
       (event: React.SyntheticEvent<Element, Event>) => {
@@ -49,23 +31,19 @@ export const Categories = memo(
       setCheckedAll((state) => !state);
     }, [selectCategoryHandler]);
 
-    if (isError) {
-      setTimeout(() => navigation("/"), 2000);
-      return (
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="h6"
-          color="darkred"
-          sx={{ textAlign: "center" }}
-        >
-          Some thing went wrong
-        </Typography>
-      );
-    }
-
     return (
       <>
+        {isError && (
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h6"
+            color="darkred"
+            sx={{ textAlign: "center" }}
+          >
+            Some thing went wrong
+          </Typography>
+        )}
         {isLoading && (
           <Typography
             variant="h5"

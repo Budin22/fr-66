@@ -1,10 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
-import { FilterValue, ProductItem } from "./types";
-import { fetchLinks } from "../../api/fetch-links";
+import { ProductItem } from "./types";
 import { Filter } from "./Filter";
 import { Categories } from "./Categories";
 import { ProductsListItem } from "./ProductsListItem";
@@ -13,13 +10,7 @@ import { ProductsPagination } from "./ProductsPagination";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
-
-const fetchProducts = async () => {
-  return await axios
-    .get(fetchLinks.products)
-    .then((res) => res.data)
-    .catch((err) => console.log(err));
-};
+import { useProductsQuery } from "../../hooks/useProductsQuery";
 
 export const ProductsView = memo(() => {
   const navigation = useNavigate();
@@ -28,27 +19,42 @@ export const ProductsView = memo(() => {
 
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [filterValue, setFilterValue] = useState<FilterValue>();
-  const [rating, setRating] = useState<number[]>([]);
-  const [price, setPrice] = useState<number[]>([]);
+
+  const [isNew, setIsNew] = useState<boolean>(false);
+  const [isSale, setIsSale] = useState<boolean>(false);
+  const [isInStock, setIsInStock] = useState<boolean>(false);
+
+  const [rating, setRating] = useState<number[]>([0, 100]);
+  const [price, setPrice] = useState<number[]>([0, 1000]);
 
   const debouncedSearch = useDebounce(searchValue, 300);
   const debouncedCategory = useDebounce(selectedCategory, 500);
-  const debouncedFilterValue = useDebounce(filterValue, 500);
+
+  const debouncedIsNew = useDebounce(isNew, 500);
+  const debouncedIsSale = useDebounce(isSale, 500);
+  const debouncedIsInStock = useDebounce(isInStock, 500);
   const debouncedRating = useDebounce(rating, 500);
   const debouncedPrice = useDebounce(price, 500);
 
-  const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
-    staleTime: 60000,
-  });
+  const { isError, isLoading, data } = useProductsQuery();
 
-  const products: ProductItem[] = data;
+  const products: ProductItem[] = useMemo(() => (data ? data : []), [data]);
 
-  const ratingHandler = useCallback((rating: number[]) => {
+  const isNewChange = useCallback((isNew: boolean) => {
+    setIsNew(isNew);
+  }, []);
+  const isSaleChange = useCallback((isSale: boolean) => {
+    setIsSale(isSale);
+  }, []);
+  const isInStockChange = useCallback((isInStock: boolean) => {
+    setIsInStock(isInStock);
+  }, []);
+
+  const ratingChange = useCallback((rating: number[]) => {
     setRating(rating);
   }, []);
 
-  const priceHandler = useCallback((price: number[]) => {
+  const priceChange = useCallback((price: number[]) => {
     setPrice(price);
   }, []);
 
@@ -75,10 +81,6 @@ export const ProductsView = memo(() => {
     [selectedCategory, setSelectedCategory]
   );
 
-  const filterHandler = useCallback((filterValue: FilterValue) => {
-    setFilterValue(filterValue);
-  }, []);
-
   const changeSearchValue = useCallback(
     (value: string) => setSearchValue(value),
     []
@@ -101,15 +103,15 @@ export const ProductsView = memo(() => {
           item.title.toLowerCase().includes(debouncedSearch.toLocaleString());
       }
 
-      if (result && debouncedFilterValue?.isNew) {
+      if (result && debouncedIsNew) {
         result = result && item.isNew;
       }
 
-      if (result && debouncedFilterValue?.isSale) {
+      if (result && debouncedIsSale) {
         result = result && item.isSale;
       }
 
-      if (result && debouncedFilterValue?.isInStock) {
+      if (result && debouncedIsInStock) {
         result = result && item.isInStock;
       }
 
@@ -131,7 +133,9 @@ export const ProductsView = memo(() => {
     });
   }, [
     products,
-    debouncedFilterValue,
+    debouncedIsInStock,
+    debouncedIsSale,
+    debouncedIsNew,
     debouncedPrice,
     debouncedRating,
     debouncedSearch,
@@ -177,9 +181,7 @@ export const ProductsView = memo(() => {
       </Typography>
     );
   }
-
   currentProducts?.sort((a, b) => (a.isInStock < b.isInStock ? 1 : -1));
-
   return (
     <Box display="flex" paddingTop={3} columnGap={4}>
       <Box width={250}>
@@ -189,16 +191,26 @@ export const ProductsView = memo(() => {
         />
         {!!currentProducts && (
           <Filter
-            filterHandler={filterHandler}
-            ratingHandler={ratingHandler}
-            priceHandler={priceHandler}
-            rating={limRating}
-            price={limPrice}
+            isNew={isNew}
+            isSale={isSale}
+            isInStock={isInStock}
+            isNewChange={isNewChange}
+            isSaleChange={isSaleChange}
+            isInStockChange={isInStockChange}
+            ratingChange={ratingChange}
+            priceChange={priceChange}
+            rating={rating}
+            price={price}
+            limRating={limRating}
+            limPrice={limPrice}
           />
         )}
       </Box>
       <Box sx={{ width: "100%" }}>
-        <Search changeSearchValue={changeSearchValue} />
+        <Search
+          changeSearchValue={changeSearchValue}
+          searchValue={searchValue}
+        />
         {!products?.length && (
           <Typography
             width="100%"

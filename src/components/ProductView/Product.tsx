@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { addProduct, removeProduct } from "../../redux/ducks/cart-duck";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 
 import { ProductItem } from "../ProductsView/types";
+import { useIsInCart, useSelectorAll } from "../../hooks/hooks";
 
 interface ProductPropsI {
   data: ProductItem;
@@ -20,8 +21,10 @@ interface ProductPropsI {
 }
 
 export const Product = memo((props: ProductPropsI) => {
+  const isInCart = useIsInCart();
   const dispatch = useAppDispatch();
-  const cartProducts = useAppSelector((state) => state.cart);
+  const { cart } = useSelectorAll();
+
   const {
     photo,
     id,
@@ -35,14 +38,14 @@ export const Product = memo((props: ProductPropsI) => {
   }: ProductItem = props.data;
   const isError = props.isError;
 
-  const ProductHandler = useCallback(() => {
-    const index: number = cartProducts.findIndex((item) => item.id === id);
+  const productHandler = useCallback(() => {
+    const index: number = cart.findIndex((item) => item.id === id);
     if (index > -1) {
       dispatch(removeProduct({ index }));
     } else {
       dispatch(addProduct({ id, number: 1, photo, title, price }));
     }
-  }, [cartProducts, id, photo, price, dispatch, title]);
+  }, [cart, id, photo, price, dispatch, title]);
 
   return !isError ? (
     <Card
@@ -103,15 +106,13 @@ export const Product = memo((props: ProductPropsI) => {
         <Rating name="readOnly " readOnly precision={0.1} value={rating / 20} />
         <Button
           fullWidth={true}
-          onClick={ProductHandler}
+          onClick={productHandler}
           variant="contained"
           disabled={!isInStock}
           color="success"
           LinkComponent={Link}
         >
-          {!!cartProducts.find((item) => item.id === id)
-            ? "Remove from cart"
-            : "Add to cart"}
+          {isInCart(id) ? "Remove from cart" : "Add to cart"}
         </Button>
       </CardActions>
     </Card>

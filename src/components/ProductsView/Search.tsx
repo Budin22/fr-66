@@ -1,29 +1,25 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback } from "react";
 import { Input } from "@mui/material";
 
 import { SearchProps } from "./types";
 
-export const Search = memo(({ changeSearchValue }: SearchProps) => {
-  const [value, setValue] = useState("");
+export const Search = memo(
+  ({ changeSearchValue, searchValue }: SearchProps) => {
+    const searchHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        changeSearchValue(e.currentTarget.value);
+      },
+      [changeSearchValue]
+    );
 
-  const searchHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.currentTarget.value);
-    },
-    []
-  );
-
-  useEffect(() => {
-    changeSearchValue(value);
-  }, [value, changeSearchValue]);
-
-  return (
-    <Input
-      sx={{ alignText: "center", marginBottom: 2 }}
-      fullWidth={true}
-      onChange={searchHandler}
-      placeholder="Search your product by name"
-      value={value}
-    />
-  );
-});
+    return (
+      <Input
+        sx={{ alignText: "center", marginBottom: 2 }}
+        fullWidth={true}
+        onChange={searchHandler}
+        placeholder="Search your product by name"
+        value={searchValue}
+      />
+    );
+  }
+);

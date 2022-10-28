@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InputsI } from "../../components/FormView/form-types";
+import { TOrder } from "../../components/FormView/form-types";
 
-const cartNamespace = "form" as const;
+const namespace = "form" as const;
 
-export const initialState: InputsI = {
+export const initialState: TOrder = {
   address: "",
   address2: "",
   checkbox: false,
@@ -21,13 +21,14 @@ export const {
   actions: { submitForm, clearForm },
   reducer,
 } = createSlice({
-  name: cartNamespace,
+  name: namespace,
   initialState,
   reducers: {
-    submitForm(state, action: PayloadAction<InputsI>) {
+    submitForm(state, action: PayloadAction<TOrder>) {
       return action.payload;
     },
     clearForm() {
+      localStorage.removeItem("form");
       return initialState;
     },
   },

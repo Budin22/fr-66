@@ -20,10 +20,9 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { InputsI } from "./form-types";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { submitForm } from "../../redux/ducks/form-duck";
+import { TOrder } from "./form-types";
 import { useNavigate } from "react-router-dom";
+import { useDispatchSubmitForm, useSelectorAll } from "../../hooks/hooks";
 
 const schema = yup
   .object({
@@ -49,17 +48,17 @@ const schema = yup
   .required();
 
 export const FormView = memo(() => {
-  const formValue = useAppSelector((state) => state.form);
+  const { form } = useSelectorAll();
+  const dispatchSubmitForm = useDispatchSubmitForm();
   const navigation = useNavigate();
-  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
     reset,
     control,
     formState: { errors },
-  } = useForm<InputsI>({
-    defaultValues: formValue,
+  } = useForm<TOrder>({
+    defaultValues: form,
     resolver: yupResolver(schema),
   });
 
@@ -72,8 +71,8 @@ export const FormView = memo(() => {
     }
   };
 
-  const onSubmit: SubmitHandler<InputsI> = (data) => {
-    dispatch(submitForm(data));
+  const onSubmit: SubmitHandler<TOrder> = (data) => {
+    dispatchSubmitForm(data);
     navigation("/products");
     reset();
   };

@@ -1,25 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface InitialStateI {
+export type TInitialState = {
   id: string;
   number: number;
   photo: string;
   title: string;
   price: string;
-}
+};
 
-export interface ChangeActionI {
+export type TInitialS = Array<TInitialState>;
+
+export type TChangeNumberAction = {
   index: number;
   number: number;
-}
+};
 
-export interface RemoveActionI {
+export type TRemoveProductAction = {
   index: number;
-}
+};
 
-const cartNamespace = "cart" as const;
+const namespace = "cart" as const;
 
-const initialState: InitialStateI[] = [];
+const initialState: TInitialS = [];
 
 export const {
   actions: {
@@ -31,22 +33,23 @@ export const {
   },
   reducer,
 } = createSlice({
-  name: cartNamespace,
+  name: namespace,
   initialState,
   reducers: {
-    addProductsList(state, action: PayloadAction<InitialStateI[]>) {
+    addProductsList(state, action: PayloadAction<TInitialS>) {
       return action.payload;
     },
-    addProduct(state, action: PayloadAction<InitialStateI>) {
+    addProduct(state, action: PayloadAction<TInitialState>) {
       state.push(action.payload);
     },
-    removeProduct(state, action: PayloadAction<RemoveActionI>) {
+    removeProduct(state, action: PayloadAction<TRemoveProductAction>) {
       state.splice(action.payload.index, 1);
     },
-    changeNumberProduct(state, action: PayloadAction<ChangeActionI>) {
+    changeNumberProduct(state, action: PayloadAction<TChangeNumberAction>) {
       state[action.payload.index].number = action.payload.number;
     },
     removeAllProducts(state) {
+      localStorage.removeItem("cart");
       state.length = 0;
     },
   },

@@ -8,22 +8,24 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { useAppSelector } from "../../redux/store";
+import { useSelectorAll } from "../../hooks/hooks";
 
 export const UserInfo = memo(() => {
   const {
-    firstName,
-    lastName,
-    address,
-    address2,
-    city,
-    country,
-    email,
-    phone,
-    checkbox,
-    textarea,
-    delivery,
-  } = useAppSelector((state) => state.form);
+    form: {
+      firstName,
+      lastName,
+      address,
+      address2,
+      city,
+      country,
+      email,
+      phone,
+      checkbox,
+      textarea,
+      delivery,
+    },
+  } = useSelectorAll();
   return (
     <Accordion>
       <AccordionSummary

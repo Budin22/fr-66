@@ -2,12 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import * as Cart from "./ducks/cart-duck";
 import * as Form from "./ducks/form-duck";
-import { InputsI } from "../components/FormView/form-types";
-import { InitialStateI } from "./ducks/cart-duck";
+import { TOrder } from "../components/FormView/form-types";
+import { TInitialS } from "./ducks/cart-duck";
 import { initialState } from "./ducks/form-duck";
 
-const cart: InitialStateI[] = JSON.parse(localStorage.getItem("cart") || "[]");
-const form: InputsI = localStorage.getItem("form")
+const cart: TInitialS = JSON.parse(localStorage.getItem("cart") || "[]");
+const form: TOrder = localStorage.getItem("form")
   ? JSON.parse(localStorage.getItem("form") || "")
   : initialState;
 
@@ -27,7 +27,7 @@ store.subscribe(() => {
   localStorage.setItem("form", JSON.stringify(store.getState().form));
 });
 
-type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

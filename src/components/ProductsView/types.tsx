@@ -15,20 +15,22 @@ export interface ProductsListSinglItem {
   product: ProductItem;
 }
 
-export interface FilterValue {
+export interface FilterProps {
+  ratingChange: (rating: number[]) => void;
+  priceChange: (price: number[]) => void;
+  rating: number[];
+  price: number[];
+  isNewChange: (isNew: boolean) => void;
+  isSaleChange: (isSale: boolean) => void;
+  isInStockChange: (isInStock: boolean) => void;
+  limRating: number[];
+  limPrice: number[];
   isNew: boolean;
   isSale: boolean;
   isInStock: boolean;
 }
 
-export interface FilterProps {
-  filterHandler: (filterValue: FilterValue) => void;
-  ratingHandler: (rating: number[]) => void;
-  priceHandler: (price: number[]) => void;
-  rating: number[];
-  price: number[];
-}
-
 export interface SearchProps {
   changeSearchValue: (value: string) => void;
+  searchValue: string;
 }

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -9,15 +9,14 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 
+import { TInitialState } from "../../redux/ducks/cart-duck";
 import {
-  changeNumberProduct,
-  InitialStateI,
-  removeProduct,
-} from "../../redux/ducks/cart-duck";
-import { useAppDispatch } from "../../redux/store";
+  useDispatchChangeNumberProduct,
+  useDispatchRemoveProductsList,
+} from "../../hooks/hooks";
 
 interface CartItemProps {
-  product: InitialStateI;
+  product: TInitialState;
   index: number;
 }
 
@@ -27,31 +26,37 @@ export const CartItem = memo((props: CartItemProps) => {
 
   const [count, setCount] = useState<number>(Number(number));
 
-  const dispatch = useAppDispatch();
+  const dispatchChangeNumberProduct = useDispatchChangeNumberProduct();
+  const dispatchRemoveProductsList = useDispatchRemoveProductsList();
 
-  useEffect(() => {
-    dispatch(changeNumberProduct({ index, number: count }));
-  }, [count, index, dispatch]);
-
-  const priceHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!Number.isNaN(parseInt(e.currentTarget.value))) {
-      setCount(parseInt(e.currentTarget.value));
-    }
-  }, []);
+  const priceHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!Number.isNaN(parseInt(e.currentTarget.value))) {
+        setCount(parseInt(e.currentTarget.value));
+        dispatchChangeNumberProduct({
+          index,
+          number: parseInt(e.currentTarget.value),
+        });
+      }
+    },
+    [dispatchChangeNumberProduct, index]
+  );
 
   const incHandler = useCallback(() => {
+    dispatchChangeNumberProduct({ index, number: count + 1 });
     setCount((state) => state + 1);
-  }, []);
+  }, [dispatchChangeNumberProduct, index, count]);
 
   const decHandler = useCallback(() => {
     if (count > 1) {
+      dispatchChangeNumberProduct({ index, number: count - 1 });
       setCount((state) => state - 1);
     }
-  }, [count]);
+  }, [count, dispatchChangeNumberProduct, index]);
 
   const removeHandler = useCallback(() => {
-    dispatch(removeProduct({ index }));
-  }, [dispatch, index]);
+    dispatchRemoveProductsList({ index });
+  }, [index, dispatchRemoveProductsList]);
 
   return (
     <Card

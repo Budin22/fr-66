@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,14 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Box, Typography } from "@mui/material";
 
-import { useAppSelector } from "../../redux/store";
+import { useSelectorAll, useSelectorCartTotalPrice } from "../../hooks/hooks";
 
 export const OrderInfo = memo(() => {
-  const orderProducts = useAppSelector((state) => state.cart);
-  const totalPrice = useMemo(
-    () => orderProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
-    [orderProducts]
-  );
+  const { cart } = useSelectorAll();
+  const totalPrice = useSelectorCartTotalPrice();
 
   return (
     <Box
@@ -45,7 +42,7 @@ export const OrderInfo = memo(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orderProducts.map((row) => (
+            {cart.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

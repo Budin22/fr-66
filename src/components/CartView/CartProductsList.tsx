@@ -9,34 +9,34 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
 import Backdrop from "@mui/material/Backdrop";
 
-import { clearForm } from "../../redux/ducks/form-duck";
-import { removeAllProducts } from "../../redux/ducks/cart-duck";
 import { CartItem } from "./CartItem";
 import { OrderInfo } from "./OrderInfo";
+import {
+  useDispatchClearForm,
+  useDispatchRemoveAllProducts,
+  useSelectorAll,
+} from "../../hooks/hooks";
 
 export const CartProductsList = memo(() => {
   const [open, setOpen] = useState(false);
-  const cartProducts = useAppSelector((state) => state.cart);
-  const formValue = useAppSelector((state) => state.form);
+  const { cart, form } = useSelectorAll();
+  const dispatchClearForm = useDispatchClearForm();
+  const dispatchRemoveAllProducts = useDispatchRemoveAllProducts();
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const totalPrice = useMemo(
-    () => cartProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
-    [cartProducts]
+    () => cart.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    [cart]
   );
 
   const handleClose = () => {
     setOpen(false);
-    console.log({ cart: cartProducts, userInfo: formValue });
-    dispatch(removeAllProducts());
-    dispatch(clearForm());
-    localStorage.removeItem("cart");
-    localStorage.removeItem("form");
+    console.log({ cart, userInfo: form });
+    dispatchRemoveAllProducts();
+    dispatchClearForm();
     navigate("/products");
   };
 
@@ -46,7 +46,7 @@ export const CartProductsList = memo(() => {
 
   return (
     <>
-      {!!cartProducts.length ? (
+      {!!cart.length ? (
         <>
           <Accordion>
             <AccordionSummary
@@ -63,7 +63,7 @@ export const CartProductsList = memo(() => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ maxHeight: 355, overflowY: "scroll" }}>
-              {cartProducts.map((item, index) => (
+              {cart.map((item, index) => (
                 <CartItem key={item.id} index={index} product={item} />
               ))}
             </AccordionDetails>
@@ -81,7 +81,7 @@ export const CartProductsList = memo(() => {
               <Button
                 onClick={handleToggle}
                 variant="contained"
-                disabled={!formValue.firstName}
+                disabled={!form.firstName}
               >
                 Make order
               </Button>

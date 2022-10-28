@@ -1,57 +1,21 @@
-import React, { memo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { memo, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { Stack, Typography } from "@mui/material";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
-import { fetchLinks } from "../../api/fetch-links";
 import { Product } from "./Product";
 import { ProductItem } from "../ProductsView/types";
+import { useProductsQuery } from "../../hooks/useProductsQuery";
 
 export const ProductView = memo(() => {
-  const navigation = useNavigate();
   const params = useParams();
 
-  const fetchProduct = async () => {
-    return await axios
-      .get(fetchLinks.products)
-      .then((res) => res.data)
-      .catch((err) => {
-        throw Error(err.massage);
-      });
-  };
+  const { isError, data } = useProductsQuery();
+  let allProducts: ProductItem[] = useMemo(() => (data ? data : []), [data]);
 
-  const { isError, data } = useQuery(["products"], fetchProduct, {
-    staleTime: 60000,
-  });
-  const allProducts: ProductItem[] = data;
-
-  if (isError) {
-    setTimeout(() => navigation(-1), 2000);
-    return (
-      <Typography
-        gutterBottom
-        variant="h5"
-        component="h6"
-        color="darkred"
-        sx={{ textAlign: "center" }}
-      >
-        Some thing went wrong
-      </Typography>
-    );
-  }
-
-  if (!data) {
-    return (
-      <Typography variant="h5" component="h6">
-        Loading...
-      </Typography>
-    );
-  }
-
-  const currentProduct: ProductItem = allProducts?.filter(
-    (item) => +item.id === Number(params.id)
-  )[0];
+  const currentProduct: ProductItem = useMemo(
+    () => allProducts?.filter((item) => +item.id === Number(params.id))[0],
+    [allProducts, params.id]
+  );
 
   const someProduct: ProductItem[] = [];
 
@@ -66,32 +30,50 @@ export const ProductView = memo(() => {
       someProduct.push(allProducts[i]);
     }
 
-    if (someProduct.length === 3) {
-      i = allProducts.length;
-    }
+    if (someProduct.length === 3) break;
   }
 
   return (
     <>
-      <Product
-        key={currentProduct.id}
-        data={currentProduct}
-        isError={isError}
-      />
-      <Typography
-        sx={{ textAlign: "center", padding: 2 }}
-        color="steelblue"
-        component="h4"
-        variant="h3"
-      >
-        Maybe you also want to buy some of them? :)))))
-      </Typography>
-      <Stack direction="row" spacing={2}>
-        {!!someProduct.length &&
-          someProduct.map((item) => (
-            <Product key={item.id} data={item} isError={isError} />
-          ))}
-      </Stack>
+      {isError && (
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="h6"
+          color="darkred"
+          sx={{ textAlign: "center" }}
+        >
+          Some thing went wrong
+        </Typography>
+      )}
+      {!data && (
+        <Typography variant="h5" component="h6">
+          Loading...
+        </Typography>
+      )}
+      {data && (
+        <>
+          <Product
+            key={currentProduct.id}
+            data={currentProduct}
+            isError={isError}
+          />
+          <Typography
+            sx={{ textAlign: "center", padding: 2 }}
+            color="steelblue"
+            component="h4"
+            variant="h3"
+          >
+            Maybe you also want to buy some of them? :)))))
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            {!!someProduct.length &&
+              someProduct.map((item) => (
+                <Product key={item.id} data={item} isError={isError} />
+              ))}
+          </Stack>
+        </>
+      )}
     </>
   );
 });

@@ -1,4 +1,4 @@
-export interface InputsI {
+export type TOrder = {
   firstName: string;
   lastName: string;
   country: "Ukraine" | "Finland" | "Poland" | "";
@@ -10,4 +10,4 @@ export interface InputsI {
   address2: string;
   textarea: string;
   checkbox: boolean;
-}
+};
