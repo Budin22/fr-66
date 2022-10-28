@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
 
+// вынести это в src/api/catalog-api.ts
 const fetchProducts = async () => {
   return await axios
     .get(fetchLinks.products)
@@ -38,6 +39,7 @@ export const ProductsView = memo(() => {
   const debouncedRating = useDebounce(rating, 500);
   const debouncedPrice = useDebounce(price, 500);
 
+  // вынести в отдельный хук useProductsQuery
   const { isError, isLoading, data } = useQuery(["products"], fetchProducts, {
     staleTime: 60000,
   });

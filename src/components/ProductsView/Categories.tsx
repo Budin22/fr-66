@@ -12,6 +12,7 @@ import { CategoriesProps, Category } from "./categories-types";
 import { fetchLinks } from "../../api/fetch-links";
 import { useNavigate } from "react-router-dom";
 
+// вынести в src/api/catalog-api.ts
 const fetchCategories = async () => {
   return await axios
     .get(fetchLinks.categories)
@@ -21,8 +22,11 @@ const fetchCategories = async () => {
 
 export const Categories = memo(
   ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
+    // вот этот внутрениий стейт приведет к потенциальным ошибкам, если его не синхронизировать с выбранными категориями из пропсов
     const [checkedAll, setCheckedAll] = useState(true);
     const navigation = useNavigate();
+
+    // вынести в хук useCategoriesQuery
     const { isError, isLoading, data } = useQuery(
       ["categories"],
       fetchCategories,
@@ -50,6 +54,8 @@ export const Categories = memo(
     }, [selectCategoryHandler]);
 
     if (isError) {
+      // нееет, никаких редиректов в случае ошибки!
+      // и никаких сайд-эффектов в теле функционального компонента!
       setTimeout(() => navigation("/"), 2000);
       return (
         <Typography

@@ -95,6 +95,7 @@ export const ProductsListItem = memo(({ product }: ProductsListSinglItem) => {
           {...{ to: url }}
         >
           Show{" "}
+          {/* вот это нужно вынести в селектор и хук */}
           {cartProducts.find((item) => item.id === id)
             ? "(Product in cart)"
             : ""}

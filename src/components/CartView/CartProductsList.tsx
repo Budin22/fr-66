@@ -19,24 +19,24 @@ import { OrderInfo } from "./OrderInfo";
 
 export const CartProductsList = memo(() => {
   const [open, setOpen] = useState(false);
-  const cartProducts = useAppSelector((state) => state.cart);
-  const formValue = useAppSelector((state) => state.form);
+  const cartProducts = useAppSelector((state) => state.cart); // отдельный селектор и хук
+  const formValue = useAppSelector((state) => state.form); // отдельный селектор и хук
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const totalPrice = useMemo(
-    () => cartProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    () => cartProducts.reduce((a, b) => a + parseInt(b.price) * b.number, 0), // отдельный селектор и хук
     [cartProducts]
   );
 
   const handleClose = () => {
     setOpen(false);
     console.log({ cart: cartProducts, userInfo: formValue });
-    dispatch(removeAllProducts());
-    dispatch(clearForm());
-    localStorage.removeItem("cart");
-    localStorage.removeItem("form");
+    dispatch(removeAllProducts()); // отдельный хук
+    dispatch(clearForm()); // отдельный хук
+    localStorage.removeItem("cart"); // это должно быть в редьюсере после срабатывания экшена
+    localStorage.removeItem("form"); // это должно быть в редьюсере после срабатывания экшена
     navigate("/products");
   };
 

@@ -23,7 +23,7 @@ export const UserInfo = memo(() => {
     checkbox,
     textarea,
     delivery,
-  } = useAppSelector((state) => state.form);
+  } = useAppSelector((state) => state.form); // вынести это в отдельный селектор и хук
   return (
     <Accordion>
       <AccordionSummary

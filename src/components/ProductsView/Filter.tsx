@@ -34,6 +34,7 @@ export const Filter = memo((props: FilterProps) => {
   );
 
   useEffect(() => {
+    // вот это лишний кусок логики, можно в родителе сразу пересчитывать новые продукты когда фильтры меняются
     filterHandler({
       isNew,
       isSale,
@@ -42,10 +43,12 @@ export const Filter = memo((props: FilterProps) => {
   }, [isNew, isSale, isInStock, filterHandler]);
 
   useEffect(() => {
+    // тоже самое
     ratingHandler(rating);
   }, [rating, ratingHandler]);
 
   useEffect(() => {
+    // тоже самое
     priceHandler(price);
   }, [price, priceHandler]);
 

@@ -30,7 +30,8 @@ export const CartItem = memo((props: CartItemProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(changeNumberProduct({ index, number: count }));
+    // зачем? почему не сразу в обработчике события?
+    dispatch(changeNumberProduct({ index, number: count })); // отдельный хук
   }, [count, index, dispatch]);
 
   const priceHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,7 @@ export const CartItem = memo((props: CartItemProps) => {
   }, [count]);
 
   const removeHandler = useCallback(() => {
-    dispatch(removeProduct({ index }));
+    dispatch(removeProduct({ index })); // отдельный хук
   }, [dispatch, index]);
 
   return (
