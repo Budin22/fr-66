@@ -18,6 +18,7 @@ export const ProductsView = memo(() => {
   const [rowsPerPage, setRowsPerPage] = useState(9);
 
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [selectAllCategories, setSelectAllCategories] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [isNew, setIsNew] = useState<boolean>(false);
@@ -62,9 +63,11 @@ export const ProductsView = memo(() => {
     (category: string) => {
       if (category === "all") {
         if (!selectedCategory.length) {
+          setSelectAllCategories(false);
           setSelectedCategory(["none"]);
           return;
         } else {
+          setSelectAllCategories(true);
           setSelectedCategory([]);
           return;
         }
@@ -73,8 +76,8 @@ export const ProductsView = memo(() => {
         setSelectedCategory(
           selectedCategory.filter((item) => item !== category)
         );
-        return;
       } else {
+        setSelectAllCategories(false);
         setSelectedCategory((state) => [...state, category]);
       }
     },
@@ -188,6 +191,7 @@ export const ProductsView = memo(() => {
         <Categories
           selectCategoryHandler={selectCategoryHandler}
           selectedCategory={selectedCategory}
+          selectAllCategories={selectAllCategories}
         />
         {!!currentProducts && (
           <Filter

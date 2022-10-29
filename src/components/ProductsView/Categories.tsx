@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback } from "react";
 import {
   Checkbox,
   FormControlLabel,
@@ -10,14 +10,16 @@ import { CategoriesProps } from "./categories-types";
 import { useProductsQuery } from "../../hooks/useCatalogQuery";
 
 export const Categories = memo(
-  ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
-    const [checkedAll, setCheckedAll] = useState(true);
+  ({
+    selectedCategory,
+    selectCategoryHandler,
+    selectAllCategories,
+  }: CategoriesProps) => {
     const { isError, isLoading, data } = useProductsQuery();
     const categories = data;
 
     const categoriesHandler = useCallback(
       (event: React.SyntheticEvent<Element, Event>) => {
-        setCheckedAll(false);
         const id = event.currentTarget.getAttribute("name");
         if (id !== null) {
           selectCategoryHandler(id);
@@ -25,11 +27,6 @@ export const Categories = memo(
       },
       [selectCategoryHandler]
     );
-
-    const allCheckedHandler = useCallback(() => {
-      selectCategoryHandler("all");
-      setCheckedAll((state) => !state);
-    }, [selectCategoryHandler]);
 
     return (
       <>
@@ -61,10 +58,11 @@ export const Categories = memo(
             </Typography>
             <FormGroup>
               <FormControlLabel
-                onChange={allCheckedHandler}
-                control={<Checkbox checked={checkedAll} />}
+                onChange={categoriesHandler}
+                control={<Checkbox checked={selectAllCategories} />}
                 label="All categories"
-                value={checkedAll}
+                name="all"
+                value={selectAllCategories}
               />
             </FormGroup>
             {categories.length
@@ -74,12 +72,16 @@ export const Categories = memo(
                       onChange={categoriesHandler}
                       control={
                         <Checkbox
-                          checked={selectedCategory.includes(id) || checkedAll}
+                          checked={
+                            selectedCategory.includes(id) || selectAllCategories
+                          }
                         />
                       }
                       label={name}
                       name={id}
-                      value={selectedCategory.includes(id) || checkedAll}
+                      value={
+                        selectedCategory.includes(id) || selectAllCategories
+                      }
                     />
                   </FormGroup>
                 ))
