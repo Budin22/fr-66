@@ -1,47 +1,79 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { Stack, Typography } from "@mui/material";
 
-import { ProductItem } from "../ProductsView/types";
-import { Link, useParams } from "react-router-dom";
-import { Button } from "@mui/material";
-import { getFetchData } from "../Units/getFetchData";
+import { Product } from "./Product";
+import { TProduct, TProductsList } from "../ProductsView/types";
+import { useProductsQuery } from "../../hooks/useProductsQuery";
 
-export const ProductView = () => {
-  const style = { width: "18rem" };
+export const ProductView = memo(() => {
+  const params = useParams();
 
-  const productId = useParams();
-  const url = `https://61f5558a62f1e300173c40f3.mockapi.io/products/${productId.id}`;
+  const { isError, data } = useProductsQuery();
+  let allProducts: TProductsList = useMemo(() => (data ? data : []), [data]);
 
-  const [product, setProduct] = useState<ProductItem>();
+  const currentProduct: TProduct = useMemo(
+    () => allProducts?.filter((item) => +item.id === Number(params.id))[0],
+    [allProducts, params.id]
+  );
 
-  useEffect(() => {
-    getFetchData(url).then((data: ProductItem) => setProduct({ ...data }));
-  }, [url]);
+  const someProduct: TProductsList = [];
+
+  for (let i = 0; i < allProducts.length; i++) {
+    if (
+      allProducts[i].categories.some((item) =>
+        currentProduct.categories.includes(item)
+      ) &&
+      allProducts[i].id !== currentProduct.id &&
+      allProducts[i].isInStock
+    ) {
+      someProduct.push(allProducts[i]);
+    }
+
+    if (someProduct.length === 3) break;
+  }
 
   return (
-    <div className="card" style={style}>
-      <img
-        src={`${product?.photo}?v=${product?.id}`}
-        className="card-img-top"
-        alt={product?.title}
-      />
-      <div className="card-body">
-        <h5 className="card-title">{product?.title}</h5>
-        <p className="card-text">{product?.description}</p>
-        {product?.isNew ? <p className="card-text">Новинка</p> : null}
-        {product?.isSale ? <p className="card-text">Распродажа</p> : null}
-        {product?.isInStock ? (
-          <p className="card-text">В наличии / Нет в наличии</p>
-        ) : null}
-        <p className="card-text">{product?.price} $</p>
-        <p className="card-text">Рейтинг: {product?.rating}</p>
-        <Button
-          variant="contained"
-          LinkComponent={Link}
-          {...{ to: "/products" }}
+    <>
+      {isError && (
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="h6"
+          color="darkred"
+          sx={{ textAlign: "center" }}
         >
-          Back
-        </Button>
-      </div>
-    </div>
+          Some thing went wrong
+        </Typography>
+      )}
+      {!data && (
+        <Typography variant="h5" component="h6">
+          Loading...
+        </Typography>
+      )}
+      {data && (
+        <>
+          <Product
+            key={currentProduct.id}
+            data={currentProduct}
+            isError={isError}
+          />
+          <Typography
+            sx={{ textAlign: "center", padding: 2 }}
+            color="steelblue"
+            component="h4"
+            variant="h3"
+          >
+            Maybe you also want to buy some of them? :)))))
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            {!!someProduct.length &&
+              someProduct.map((item) => (
+                <Product key={item.id} data={item} isError={isError} />
+              ))}
+          </Stack>
+        </>
+      )}
+    </>
   );
-};
+});

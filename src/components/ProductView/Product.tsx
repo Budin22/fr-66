@@ -1,35 +1,62 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import {
   Button,
+  Card,
+  CardActions,
   CardContent,
   CardMedia,
-  CardActions,
-  Card,
   Rating,
+  Typography,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
-import { TProductsObj } from "./types";
-import { useIsInCart } from "../../hooks/cart-hooks";
+import { TProduct } from "../ProductsView/types";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
+import {
+  useDispatchAddProduct,
+  useDispatchRemoveProduct,
+  useIsInCart,
+} from "../../hooks/cart-hooks";
+import { ProductPropsI } from "./product-types";
 
-export const ProductsListItem = memo(({ product }: TProductsObj) => {
+export const Product = memo((props: ProductPropsI) => {
   const isInCart = useIsInCart();
+  const dispatchAddProduct = useDispatchAddProduct();
+  const dispatchRemoveProduct = useDispatchRemoveProduct();
+
+  const { cart } = useSelectorAll();
+
   const {
     photo,
-    title,
-    description,
-    price,
     id,
     rating,
     isNew,
     isSale,
     isInStock,
-  } = product;
+    price,
+    title,
+    description,
+  }: TProduct = props.data;
+  const isError = props.isError;
 
-  const url = `/product/${id}`;
+  const productHandler = useCallback(() => {
+    const index: number = cart.order?.findIndex((item) => item.id === id);
+    if (index > -1) {
+      dispatchRemoveProduct({ index });
+    } else {
+      dispatchAddProduct({ id, number: 1, photo, title, price });
+    }
+  }, [
+    cart,
+    id,
+    photo,
+    price,
+    dispatchAddProduct,
+    dispatchRemoveProduct,
+    title,
+  ]);
 
-  return (
+  return !isError ? (
     <Card
       sx={{
         maxWidth: "31%",
@@ -88,15 +115,19 @@ export const ProductsListItem = memo(({ product }: TProductsObj) => {
         <Rating name="readOnly " readOnly precision={0.1} value={rating / 20} />
         <Button
           fullWidth={true}
+          onClick={productHandler}
           variant="contained"
           disabled={!isInStock}
           color="success"
           LinkComponent={Link}
-          {...{ to: url }}
         >
-          Show {isInCart(id) ? "(Product in cart)" : ""}
+          {isInCart(id) ? "Remove from cart" : "Add to cart"}
         </Button>
       </CardActions>
     </Card>
+  ) : (
+    <Typography variant="h5" component="h6">
+      isError
+    </Typography>
   );
 });

@@ -1,55 +1,38 @@
-import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouteObject, useRoutes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useRoutes } from "react-router-dom";
 import { Container } from "@mui/material";
 
 import { Header } from "./components/Header";
-import { FormPage } from "./pages/FormPage";
-import { ProductsPage } from "./pages/ProductsPage";
-import { HomePage } from "./pages/HomePage";
-import { AboutPage } from "./pages/AboutPage";
-import { ProductPage } from "./pages/ProductPage";
-import { CartPage } from "./pages/CartPage";
-
-const queryClient = new QueryClient();
+import { routes } from "./routes";
+import { useDispatchAddAllProduct } from "./hooks/cart-hooks";
+import { useDispatchAddAllUsers } from "./hooks/user-hooks";
+import { useDispatchSubmitForm } from "./hooks/form-hooks";
 
 function App() {
-  const routes: RouteObject[] = [
-    {
-      path: "/",
-      element: <HomePage />,
-    },
-    {
-      path: "/products",
-      element: <ProductsPage />,
-    },
-    {
-      path: "/form",
-      element: <FormPage />,
-    },
-    {
-      path: "/about",
-      element: <AboutPage />,
-    },
-    {
-      path: "/cart",
-      element: <CartPage />,
-    },
-    {
-      path: "/product/:id",
-      element: <ProductPage />,
-    },
-  ];
-
   const root = useRoutes(routes);
+  const dispatchAddAllProduct = useDispatchAddAllProduct();
+  const dispatchSubmitForm = useDispatchSubmitForm();
+  const dispatchAddAllUsers = useDispatchAddAllUsers();
 
+  useEffect(() => {
+    const cart = localStorage.getItem("cart");
+    const form = localStorage.getItem("form");
+    const user = localStorage.getItem("user");
+    if (cart !== null) {
+      dispatchAddAllProduct(JSON.parse(cart));
+    }
+    if (form !== null) {
+      dispatchSubmitForm(JSON.parse(form));
+    }
+    if (user !== null) {
+      dispatchAddAllUsers(JSON.parse(user));
+    }
+  }, [dispatchAddAllProduct, dispatchSubmitForm, dispatchAddAllUsers]);
   return (
-    <QueryClientProvider client={queryClient}>
-      <Container>
-        <Header />
-        {root}
-      </Container>
-    </QueryClientProvider>
+    <>
+      <Header />
+      <Container sx={{ paddingTop: 8 }}>{root}</Container>
+    </>
   );
 }
 

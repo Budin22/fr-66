@@ -1,10 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
-
-import { queryState } from "../Units/query-state";
-import { getFetchData } from "../Units/getFetchData";
-import { fetchLinks } from "../Units/fetch-links";
-import { QueryError } from "./types";
-import { CategoriesProps, Category } from "./categories-types";
+import React, { memo, useCallback } from "react";
 import {
   Checkbox,
   FormControlLabel,
@@ -12,105 +6,89 @@ import {
   Typography,
 } from "@mui/material";
 
-const Categories = memo(
-  ({ selectedCategory, selectCategoryHandler }: CategoriesProps) => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [categoriesQueryStatus, setCategoriesQueryStatus] =
-      useState<queryState>(queryState.initial);
-    const [categoriesQueryError, setCategoriesQueryError] =
-      useState<QueryError>(null);
-    const [checkedAll, setCheckedAll] = useState(true);
+import { CategoriesProps } from "./categories-types";
+import { useProductsQuery } from "../../hooks/useCatalogQuery";
 
-    useEffect(() => {
-      setCategoriesQueryStatus(queryState.loading);
+export const Categories = memo(
+  ({
+    selectedCategory,
+    selectCategoryHandler,
+    selectAllCategories,
+  }: CategoriesProps) => {
+    const { isError, isLoading, data } = useProductsQuery();
+    const categories = data;
 
-      getFetchData(fetchLinks.categories)
-        .then((categoriesList) => {
-          setCategories(categoriesList);
-          setCategoriesQueryStatus(queryState.success);
-          setCategoriesQueryError(null);
-        })
-        .catch((error) => {
-          setCategoriesQueryStatus(queryState.error);
-          setCategoriesQueryError(error);
-        });
-    }, []);
-
-    const isLoading = useMemo(
-      () =>
-        categoriesQueryStatus === queryState.loading ||
-        categoriesQueryStatus === queryState.initial,
-      [categoriesQueryStatus]
+    const categoriesHandler = useCallback(
+      (event: React.SyntheticEvent<Element, Event>) => {
+        const id = event.currentTarget.getAttribute("name");
+        if (id !== null) {
+          selectCategoryHandler(id);
+        }
+      },
+      [selectCategoryHandler]
     );
-
-    const isSuccess = useMemo(
-      () => categoriesQueryStatus === queryState.success,
-      [categoriesQueryStatus]
-    );
-
-    const isError = useMemo(
-      () => categoriesQueryStatus === queryState.error,
-      [categoriesQueryStatus]
-    );
-
-    const categoriesHandler = (event: React.SyntheticEvent<Element, Event>) => {
-      setCheckedAll(false);
-      const id = event.currentTarget.getAttribute("name");
-      if (id !== null) {
-        selectCategoryHandler(id);
-      }
-    };
-
-    const allCheckedHandler = () => {
-      selectCategoryHandler("all");
-      setCheckedAll((state) => !state);
-    };
 
     return (
       <>
-        {isLoading && <h5 className="card-title">Loading...</h5>}
-
-        {!isLoading && isSuccess && (
+        {isError && (
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h6"
+            color="darkred"
+            sx={{ textAlign: "center" }}
+          >
+            Some thing went wrong
+          </Typography>
+        )}
+        {isLoading && (
+          <Typography
+            variant="h5"
+            component="h6"
+            color="steelblue"
+            sx={{ textAlign: "center" }}
+          >
+            Loading...
+          </Typography>
+        )}
+        {!isLoading && categories?.length && (
           <>
             <Typography variant="h5" component="h6">
               Categories
             </Typography>
             <FormGroup>
               <FormControlLabel
-                onChange={allCheckedHandler}
-                control={<Checkbox checked={checkedAll} />}
+                onChange={categoriesHandler}
+                control={<Checkbox checked={selectAllCategories} />}
                 label="All categories"
-                value={checkedAll}
+                name="all"
+                value={selectAllCategories}
               />
             </FormGroup>
             {categories.length
               ? categories.map(({ name, id }) => (
-                  <FormGroup key={id}>
+                  <FormGroup key={id} sx={{ width: "100%" }}>
                     <FormControlLabel
                       onChange={categoriesHandler}
                       control={
                         <Checkbox
-                          checked={selectedCategory.includes(id) || checkedAll}
+                          checked={
+                            selectedCategory.includes(id) || selectAllCategories
+                          }
                         />
                       }
                       label={name}
                       name={id}
-                      value={selectedCategory.includes(id) || checkedAll}
+                      value={
+                        selectedCategory.includes(id) || selectAllCategories
+                      }
                     />
                   </FormGroup>
                 ))
               : null}
           </>
         )}
-
-        {!isLoading && isError && (
-          <h5 className="card-title" style={{ color: "red" }}>
-            {categoriesQueryError?.message || "Something went wrong"}
-          </h5>
-        )}
       </>
     );
   }
 );
-
-export default Categories;
