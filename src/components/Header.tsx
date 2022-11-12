@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge, { BadgeProps } from "@mui/material/Badge";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NavLink } from "react-router-dom";
 import { Button } from "@mui/material";
@@ -38,7 +37,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export function Header() {
-  const cartProducts = useAppSelector((state) => state.cart);
+  const cartProducts = useAppSelector((state) => state.cart.order);
 
   return (
     <Box sx={{ flexGrow: 1 }} position="relative">
@@ -84,6 +83,13 @@ export function Header() {
             <StyledButton
               color="inherit"
               LinkComponent={NavLink}
+              {...{ to: "/profile", end: true }}
+            >
+              Profile
+            </StyledButton>
+            <StyledButton
+              color="inherit"
+              LinkComponent={NavLink}
               {...{ to: "/cart" }}
             >
               cart
@@ -98,7 +104,7 @@ export function Header() {
               LinkComponent={NavLink}
               {...{ to: "/cart" }}
             >
-              <StyledBadge badgeContent={cartProducts.length} color="error">
+              <StyledBadge badgeContent={cartProducts?.length} color="error">
                 <ShoppingCartIcon />
               </StyledBadge>
             </IconButton>
@@ -117,18 +123,10 @@ export function Header() {
               aria-label="account of current user"
               aria-haspopup="true"
               color="inherit"
+              LinkComponent={NavLink}
+              {...{ to: "/profile" }}
             >
               <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <MoreIcon />
             </IconButton>
           </Box>
         </Toolbar>

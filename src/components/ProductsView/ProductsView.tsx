@@ -90,7 +90,7 @@ export const ProductsView = memo(() => {
   );
 
   let currentProducts: TProduct[] = useMemo(() => {
-    return products?.filter((item: TProduct) => {
+    return products.filter((item: TProduct) => {
       let result: boolean = true;
 
       if (debouncedCategory.length) {

@@ -7,6 +7,7 @@ import { CartPage } from "./pages/CartPage";
 import { ProductPage } from "./pages/ProductPage";
 import { OrderPage } from "./pages/OrderPage";
 import { OrderComplete } from "./components/OrderView/OrderComplete";
+import { ProfilePage } from "./pages/ProfilePage";
 
 export const routes: RouteObject[] = [
   {
@@ -45,5 +46,9 @@ export const routes: RouteObject[] = [
   {
     path: "/product/:id",
     element: <ProductPage />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />,
   },
 ];

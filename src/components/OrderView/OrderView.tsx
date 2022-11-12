@@ -3,15 +3,15 @@ import Typography from "@mui/material/Typography";
 import { Box, Button, Stack } from "@mui/material";
 import { UserInfo } from "./UserInfo";
 import { OrderInfo } from "./OrderInfo";
-import { useNavigate } from "react-router-dom";
-import {
-  useDispatchClearForm,
-  useDispatchRemoveAllProducts,
-  useSelectorAll,
-} from "../../hooks/hooks";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatchAddUserOrder } from "../../hooks/user-hooks";
+import { useDispatchClearForm } from "../../hooks/form-hooks";
+import { useDispatchRemoveAllProducts } from "../../hooks/cart-hooks";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
 
 export const OrderView = memo(() => {
-  const { cart, form } = useSelectorAll();
+  const { cart, form, user } = useSelectorAll();
+  const dispatchAddUserOrder = useDispatchAddUserOrder();
   const dispatchRemoveAllProducts = useDispatchRemoveAllProducts();
   const dispatchClearForm = useDispatchClearForm();
   const navigation = useNavigate();
@@ -19,11 +19,21 @@ export const OrderView = memo(() => {
   const orderCompleteHandler = useCallback(() => {
     dispatchRemoveAllProducts();
     dispatchClearForm();
-    console.log({ id: 1, form, cart });
+    if (user.activeUser.email) {
+      dispatchAddUserOrder(cart);
+    }
+    console.log(form, cart, "create send to server");
     navigation("/order/done");
-  }, [navigation, form, cart, dispatchRemoveAllProducts, dispatchClearForm]);
+  }, [
+    navigation,
+    user.activeUser.email,
+    form,
+    cart,
+    dispatchRemoveAllProducts,
+    dispatchClearForm,
+    dispatchAddUserOrder,
+  ]);
 
-  const backHandler = useCallback(() => navigation("/form"), [navigation]);
   return (
     <>
       <Typography gutterBottom variant="h1" component="h1" textAlign="center">
@@ -31,7 +41,7 @@ export const OrderView = memo(() => {
       </Typography>
       <Stack spacing={2} marginBottom={2}>
         <UserInfo />
-        <OrderInfo />
+        <OrderInfo order={cart.order} date={cart.date} />
       </Stack>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
@@ -41,7 +51,11 @@ export const OrderView = memo(() => {
         >
           Complete order
         </Button>
-        <Button onClick={backHandler} variant="contained">
+        <Button
+          variant="contained"
+          LinkComponent={NavLink}
+          {...{ to: "/form" }}
+        >
           Change order
         </Button>
       </Box>

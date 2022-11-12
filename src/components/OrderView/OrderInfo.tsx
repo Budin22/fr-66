@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,12 +14,15 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useSelectorAll, useSelectorCartTotalPrice } from "../../hooks/hooks";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { TOrders } from "../../redux/ducks/user-types";
 
-export const OrderInfo = memo(() => {
-  const { cart } = useSelectorAll();
-  const totalPrice = useSelectorCartTotalPrice();
+export const OrderInfo = memo((props: TOrders) => {
+  const { date, order } = props;
+  const totalPrice = useMemo(
+    () => order.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    [order]
+  );
 
   return (
     <>
@@ -34,7 +37,7 @@ export const OrderInfo = memo(() => {
             component="h2"
             variant="h4"
           >
-            Check product list
+            Check product list from {date}
           </Typography>
         </AccordionSummary>
         <AccordionDetails
@@ -57,14 +60,14 @@ export const OrderInfo = memo(() => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product</TableCell>
+                    <TableCell>Products</TableCell>
                     <TableCell align="center">Number</TableCell>
                     <TableCell align="center">Price</TableCell>
                     <TableCell align="center">Total price</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {cart.map((row) => (
+                  {order.map((row) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

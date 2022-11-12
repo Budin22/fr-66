@@ -11,13 +11,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 
 import { CartItem } from "./CartItem";
-import { useSelectorAll } from "../../hooks/hooks";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
 
 export const CartProductsList = memo(() => {
   const { cart } = useSelectorAll();
   const navigate = useNavigate();
   const totalPrice = useMemo(
-    () => cart.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
+    () => cart.order?.reduce((a, b) => a + parseInt(b.price) * b.number, 0),
     [cart]
   );
 
@@ -27,7 +27,7 @@ export const CartProductsList = memo(() => {
 
   return (
     <>
-      {!!cart.length ? (
+      {!!cart.order?.length ? (
         <>
           <Accordion>
             <AccordionSummary
@@ -44,7 +44,7 @@ export const CartProductsList = memo(() => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ maxHeight: 355, overflowY: "scroll" }}>
-              {cart.map((item, index) => (
+              {cart.order.map((item, index) => (
                 <CartItem key={item.id} index={index} product={item} />
               ))}
             </AccordionDetails>

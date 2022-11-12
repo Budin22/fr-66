@@ -19,7 +19,8 @@ import * as yup from "yup";
 
 import { TOrder } from "./form-types";
 import { useNavigate } from "react-router-dom";
-import { useDispatchSubmitForm, useSelectorAll } from "../../hooks/hooks";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
+import { useDispatchSubmitForm } from "../../hooks/form-hooks";
 
 const schema = yup.object({
   firstName: yup.string().trim().min(3).max(15).required(),
@@ -143,7 +144,7 @@ export const FormView = memo(() => {
       </Box>
       <Box display="flex" gap={3}>
         <FormControl sx={{ minWidth: "25%" }} variant="standard">
-          <InputLabel>City</InputLabel>
+          <InputLabel>Email</InputLabel>
           <Input {...register("email")} placeholder="name@example.com" />
           <FormHelperText id="email" error>
             {errors.email?.message}

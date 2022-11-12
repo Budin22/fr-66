@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TOrder } from "../../components/FormView/form-types";
+import { setLocalStorage } from "../../services/setLocalStorege";
 
 const namespace = "form" as const;
 
@@ -25,10 +26,11 @@ export const {
   initialState,
   reducers: {
     submitForm(state, action: PayloadAction<TOrder>) {
+      setLocalStorage(namespace, action.payload);
       return action.payload;
     },
     clearForm() {
-      localStorage.removeItem("form");
+      localStorage.removeItem(namespace);
       return initialState;
     },
   },

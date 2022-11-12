@@ -1,27 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export type TInitialState = {
-  id: string;
-  number: number;
-  photo: string;
-  title: string;
-  price: string;
-};
-
-export type TInitialS = Array<TInitialState>;
-
-export type TChangeNumberAction = {
-  index: number;
-  number: number;
-};
-
-export type TRemoveProductAction = {
-  index: number;
-};
+import { setLocalStorage } from "../../services/setLocalStorege";
+import {
+  TChangeNumberAction,
+  TInitialS,
+  TInitialState,
+  TRemoveProductAction,
+} from "./cart-types";
 
 const namespace = "cart" as const;
 
-const initialState: TInitialS = [];
+const initialState: TInitialS = {
+  date: "",
+  order: [],
+};
 
 export const {
   actions: {
@@ -29,24 +20,35 @@ export const {
     removeProduct,
     changeNumberProduct,
     removeAllProducts,
+    addAllProduct,
   },
   reducer,
 } = createSlice({
   name: namespace,
   initialState,
   reducers: {
+    addAllProduct(state, action: PayloadAction<TInitialS>) {
+      return action.payload;
+    },
     addProduct(state, action: PayloadAction<TInitialState>) {
-      state.push(action.payload);
+      state.order.push(action.payload);
+      state.date = new Date().toLocaleString();
+      setLocalStorage(namespace, state);
     },
     removeProduct(state, action: PayloadAction<TRemoveProductAction>) {
-      state.splice(action.payload.index, 1);
+      state.date = new Date().toLocaleString();
+      state.order.splice(action.payload.index, 1);
+      setLocalStorage(namespace, state);
     },
     changeNumberProduct(state, action: PayloadAction<TChangeNumberAction>) {
-      state[action.payload.index].number = action.payload.number;
+      state.order[action.payload.index].number = action.payload.number;
+      state.date = new Date().toLocaleString();
+      setLocalStorage(namespace, state);
     },
     removeAllProducts(state) {
-      localStorage.removeItem("cart");
-      state.length = 0;
+      localStorage.removeItem(namespace);
+      state.order.length = 0;
+      setLocalStorage(namespace, state);
     },
   },
 });

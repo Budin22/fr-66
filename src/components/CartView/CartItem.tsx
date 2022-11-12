@@ -9,16 +9,11 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 
-import { TInitialState } from "../../redux/ducks/cart-duck";
 import {
   useDispatchChangeNumberProduct,
   useDispatchRemoveProduct,
-} from "../../hooks/hooks";
-
-interface CartItemProps {
-  product: TInitialState;
-  index: number;
-}
+} from "../../hooks/cart-hooks";
+import { CartItemProps } from "./cart-types";
 
 export const CartItem = memo((props: CartItemProps) => {
   const { id, number, price, title, photo } = props.product;

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { useSelectorAll } from "../../hooks/hooks";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
 
 export const UserInfo = memo(() => {
   const {

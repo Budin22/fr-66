@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 import { TProductsObj } from "./types";
-import { useIsInCart } from "../../hooks/hooks";
+import { useIsInCart } from "../../hooks/cart-hooks";
 
 export const ProductsListItem = memo(({ product }: TProductsObj) => {
   const isInCart = useIsInCart();

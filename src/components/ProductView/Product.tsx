@@ -11,17 +11,13 @@ import {
 import { Link } from "react-router-dom";
 
 import { TProduct } from "../ProductsView/types";
+import { useSelectorAll } from "../../hooks/useSelectorAll";
 import {
   useDispatchAddProduct,
   useDispatchRemoveProduct,
   useIsInCart,
-  useSelectorAll,
-} from "../../hooks/hooks";
-
-interface ProductPropsI {
-  data: TProduct;
-  isError: boolean;
-}
+} from "../../hooks/cart-hooks";
+import { ProductPropsI } from "./product-types";
 
 export const Product = memo((props: ProductPropsI) => {
   const isInCart = useIsInCart();
@@ -44,7 +40,7 @@ export const Product = memo((props: ProductPropsI) => {
   const isError = props.isError;
 
   const productHandler = useCallback(() => {
-    const index: number = cart.findIndex((item) => item.id === id);
+    const index: number = cart.order?.findIndex((item) => item.id === id);
     if (index > -1) {
       dispatchRemoveProduct({ index });
     } else {
